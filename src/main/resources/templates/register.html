@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Register | ' + ${eventName} + ': ' + ${tagline}">Register | Odyssey: Beyond the Horizon</title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
+    <link rel="stylesheet" th:href="@{/css/register.css(v=5)}" href="/css/register.css?v=5">
+</head>
+
+<body class="reg-page">
+
+    <nav class="nav">
+        <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo"
+                class="nav-logo-img">
+        </a>
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+        <ul id="navMenu">
+            <li><a th:href="@{/}" href="/">Home</a></li>
+            <li><a th:href="@{/#about}" href="/#about">About</a></li>
+            <li><a th:href="@{/#stages}" href="/#stages">Stages</a></li>
+            <li><a th:href="@{/calendar}" href="/calendar">Calendar</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find My Ticket</a></li>
+            <li><a th:href="@{/faq}" href="/faq">FAQ</a></li>
+            <li><a th:href="@{/student-response}" href="/student-response">Student Response</a></li>
+            <li><a th:href="@{/register}" href="/register" style="color: var(--aqua); font-weight: 600;">Register</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="reg-container">
+        <a th:href="@{/}" href="/" class="nav-back-link">
+            &larr; Return to Odyssey Overview
+        </a>
+
+        <header class="reg-header">
+            <div class="reg-badge">
+                <span>&#9875; Official Registration &middot; Odyssey 2026</span>
+            </div>
+            <h1>Enlist Your Crew &amp; Venture</h1>
+            <p>
+                Join the flagship E-Cell Odyssey. Complete your academic credentials, crew manifest,
+                and registration payment (&#8377;100 per person) to receive your official Odyssey Boarding Pass.
+            </p>
+
+            <div class="highlights-strip">
+                <div class="highlight-item"><span class="icon">&#128179;</span> &#8377;100 Per Person</div>
+                <div class="highlight-item"><span class="icon">&#128101;</span> 3 to 5 Members Per Group</div>
+                <div class="highlight-item"><span class="icon">&#128241;</span> UPI Payment Enabled</div>
+                <div class="highlight-item"><span class="icon">&#127919;</span> Instant Boarding Pass</div>
+            </div>
+
+            <!-- Find My Ticket Hero Action Banner -->
+            <div class="find-ticket-cta-banner">
+                <a th:href="@{/find-ticket}" href="/find-ticket" class="find-ticket-hero-link" id="btnFindMyTicket">
+                    <span class="find-ticket-badge-icon">&#127915;</span>
+                    <span class="find-ticket-badge-text">
+                        <strong>Already Registered?</strong> Click here to Find Your Ticket &rarr;
+                    </span>
+                </a>
+            </div>
+        </header>
+
+        <div th:if="${errorMessage}" class="error-banner" role="alert">
+            <span style="font-size: 1.3rem;">&#9888;</span>
+            <span th:text="${errorMessage}">Please fill in all required fields.</span>
+        </div>
+
+        <form id="odysseyRegistrationForm" method="post" th:action="@{/register}" enctype="multipart/form-data"
+            class="reg-card">
+
+            <!-- SECTION 1: PRIMARY ODYSSEY LEADER & ACADEMIC DETAILS -->
+            <div class="form-section">
+                <div class="section-head">
+                    <div class="section-icon-wrap">&#127891;</div>
+                    <div>
+                        <h2>1. Lead Participant &amp; Academic Credentials</h2>
+                        <p class="desc">Enter your primary contact details and institutional identity.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <!-- Team / Group Name -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label class="form-label" for="teamName">
+                            <span>Team Name <span class="required">*</span></span>
+                            <span class="hint">Give your group a unique team identity (must not be taken)</span>
+                        </label>
+                        <input type="text" id="teamName" name="teamName" class="form-input"
+                            placeholder="e.g. Innovators, Alpha Vanguard, CyberKnights..." th:value="${prevTeamName}"
+                            required autocomplete="off">
+                        <div id="teamNameStatus" style="margin-top: 0.4rem; font-size: 0.82rem; display: none;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="leaderName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="leaderName" name="leaderName" class="form-input" placeholder="e.g. rahul"
+                            th:value="${prevLeaderName}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="rollNumber">Roll Number <span class="required">*</span></label>
+                        <input type="text" id="rollNumber" name="rollNumber" class="form-input"
+                            placeholder="e.g. 25JR1A44F0" th:value="${prevRollNumber}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="leaderEmail">Email Address <span
+                                class="required">*</span></label>
+                        <input type="email" id="leaderEmail" name="leaderEmail" class="form-input"
+                            placeholder="Kits@gmail.com" th:value="${prevLeaderEmail}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="leaderPhone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="leaderPhone" name="leaderPhone" class="form-input"
+                            placeholder="+91  98......." th:value="${prevLeaderPhone}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="dept">Department <span class="required">*</span></label>
+                        <select id="dept" name="dept" class="form-select" onchange="checkOtherDept(true)" required>
+                            <option value="">-- Select Department --</option>
+                            <option value="CSE" th:selected="${prevDept == 'CSE'}">Computer Science &amp; Engineering
+                                (CSE)</option>
+                            <option value="CSD" th:selected="${prevDept == 'CSD'}">CSE - Data Science (CSD)</option>
+                            <option value="CSM" th:selected="${prevDept == 'CSM'}">CSE - Machine Learning (CSM)</option>
+                            <option value="CAI" th:selected="${prevDept == 'CAI'}">CSE - Artificial Intelligence (CAI)
+                            </option>
+                            <option value="ECE" th:selected="${prevDept == 'ECE'}">Electronics &amp; Communication (ECE)
+                            </option>
+                            <option value="EEE" th:selected="${prevDept == 'EEE'}">Electrical &amp; Electronics (EEE)
+                            </option>
+                            <option value="IT" th:selected="${prevDept == 'IT'}">Information Technology (IT)</option>
+                            <option value="Other"
+                                th:selected="${prevDept == 'Other' or (prevOtherDept != null and !prevOtherDept.isBlank())}">
+                                Other Department</option>
+                        </select>
+                    </div>
+
+                    <!-- Dynamic Manual Department Input (shown when 'Other' selected) -->
+                    <div class="form-group" id="otherDeptWrapper"
+                        style="display: none; grid-column: 1 / -1; background: rgba(25, 211, 230, 0.06); border: 1.5px dashed rgba(25, 211, 230, 0.4); border-radius: 12px; padding: 1.1rem 1.3rem;">
+                        <label class="form-label" for="otherDept" style="color: var(--foam);">
+                            <span>Specify Department / Branch Name <span class="required">*</span></span>
+                            <span class="hint" style="color: var(--muted); font-size: 0.8rem;">(This custom department
+                                will be saved on your pass and manifest records)</span>
+                        </label>
+                        <input type="text" id="otherDept" name="otherDept" class="form-input"
+                            placeholder="e.g. Mechanical, Civil, Chemical, Biotechnology, MCA, MBA..."
+                            th:value="${prevOtherDept}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="year">Year of Study <span class="required">*</span></label>
+                        <select id="year" name="year" class="form-select" required>
+                            <option value="">-- Select Year --</option>
+                            <option value="1st Year" th:selected="${prevYear == '1st Year'}">1st Year</option>
+                            <option value="2nd Year" th:selected="${prevYear == '2nd Year'}">2nd Year</option>
+                            <option value="3rd Year" th:selected="${prevYear == '3rd Year'}">3rd Year</option>
+                            <option value="4th Year" th:selected="${prevYear == '4th Year'}">4th Year</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="section">Section <span class="required">*</span></label>
+                        <input type="text" id="section" name="section" class="form-input" placeholder="e.g. 1 2 3..."
+                            th:value="${prevSection}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="college">College / Institute</label>
+                        <input type="text" id="college" name="college" class="form-input"
+                            placeholder="KKR and KSR institute of Technology and sciences" th:value=" ${prevCollege !=null ? prevCollege
+                            : 'KKR and KSR institute of Technology and sciences' }">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CREW SIZE & OTHER PERSONS -->
+            <div class="form-section">
+                <div class="section-head">
+                    <div class="section-icon-wrap">&#128101;</div>
+                    <div>
+                        <h2>2. Group Size &amp; Crew Members</h2>
+                        <p class="desc">Select your team size (3 to 5 persons per group). Fee is &#8377;100 per person.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>Select Number of Group Members (3 to 5 per group)</span>
+                        <span class="hint">&#8377;100 per person</span>
+                    </label>
+                    <div class="team-sizes-grid">
+                        <div class="team-size-card"
+                            th:classappend="${teamSize == 3 or teamSize == null or teamSize < 3} ? 'selected' : ''">
+                            <input type="radio" name="teamSize" value="3"
+                                th:checked="${teamSize == 3 or teamSize == null or teamSize < 3}">
+                            <div class="team-size-num">3</div>
+                            <div class="team-size-label">3 Persons (&#8377;300)</div>
+                        </div>
+                        <div class="team-size-card" th:classappend="${teamSize == 4} ? 'selected' : ''">
+                            <input type="radio" name="teamSize" value="4" th:checked="${teamSize == 4}">
+                            <div class="team-size-num">4</div>
+                            <div class="team-size-label">4 Persons (&#8377;400)</div>
+                        </div>
+                        <div class="team-size-card" th:classappend="${teamSize == 5} ? 'selected' : ''">
+                            <input type="radio" name="teamSize" value="5" th:checked="${teamSize == 5}">
+                            <div class="team-size-num">5</div>
+                            <div class="team-size-label">5 Persons (&#8377;500)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC ADDITIONAL MEMBERS (MINIMUM 3 REQUIRED) -->
+                <div class="members-container">
+                    <!-- Member 2 (Required for all teams) -->
+                    <div id="member2-block" class="member-block">
+                        <div class="member-block-title">
+                            <span>Person 2 Details</span>
+                            <span class="member-badge">Crew Member 2</span>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" name="member2Name" class="form-input"
+                                    placeholder="Member 2 Full Name" th:value="${prevMember2Name}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address <span class="required">*</span></label>
+                                <input type="email" name="member2Email" class="form-input"
+                                    placeholder="member2@example.com" th:value="${prevMember2Email}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number <span class="required">*</span></label>
+                                <input type="tel" name="member2Phone" class="form-input" placeholder="+91 98765 43210"
+                                    th:value="${prevMember2Phone}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Roll Number <span class="required">*</span></label>
+                                <input type="text" name="member2RollNumber" class="form-input"
+                                    placeholder="Member 2 Roll Number" th:value="${prevMember2RollNumber}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 3 (Required for all teams) -->
+                    <div id="member3-block" class="member-block">
+                        <div class="member-block-title">
+                            <span>Person 3 Details</span>
+                            <span class="member-badge">Crew Member 3</span>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" name="member3Name" class="form-input"
+                                    placeholder="Member 3 Full Name" th:value="${prevMember3Name}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address <span class="required">*</span></label>
+                                <input type="email" name="member3Email" class="form-input"
+                                    placeholder="member3@example.com" th:value="${prevMember3Email}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number <span class="required">*</span></label>
+                                <input type="tel" name="member3Phone" class="form-input" placeholder="+91 98765 43210"
+                                    th:value="${prevMember3Phone}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Roll Number <span class="required">*</span></label>
+                                <input type="text" name="member3RollNumber" class="form-input"
+                                    placeholder="Member 3 Roll Number" th:value="${prevMember3RollNumber}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 4 (Active when size >= 4) -->
+                    <div id="member4-block" class="member-block" th:classappend="${teamSize < 4} ? 'hidden' : ''">
+                        <div class="member-block-title">
+                            <span>Person 4 Details</span>
+                            <span class="member-badge">Crew Member 4</span>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" name="member4Name" class="form-input"
+                                    placeholder="Member 4 Full Name" th:value="${prevMember4Name}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address <span class="required">*</span></label>
+                                <input type="email" name="member4Email" class="form-input"
+                                    placeholder="member4@example.com" th:value="${prevMember4Email}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number <span class="required">*</span></label>
+                                <input type="tel" name="member4Phone" class="form-input" placeholder="+91 98765 43210"
+                                    th:value="${prevMember4Phone}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Roll Number <span class="required">*</span></label>
+                                <input type="text" name="member4RollNumber" class="form-input"
+                                    placeholder="Member 4 Roll Number" th:value="${prevMember4RollNumber}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 5 (Active when size == 5) -->
+                    <div id="member5-block" class="member-block" th:classappend="${teamSize < 5} ? 'hidden' : ''">
+                        <div class="member-block-title">
+                            <span>Person 5 Details</span>
+                            <span class="member-badge">Crew Member 5</span>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" name="member5Name" class="form-input"
+                                    placeholder="Member 5 Full Name" th:value="${prevMember5Name}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address <span class="required">*</span></label>
+                                <input type="email" name="member5Email" class="form-input"
+                                    placeholder="member5@example.com" th:value="${prevMember5Email}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number <span class="required">*</span></label>
+                                <input type="tel" name="member5Phone" class="form-input" placeholder="+91 98765 43210"
+                                    th:value="${prevMember5Phone}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Roll Number <span class="required">*</span></label>
+                                <input type="text" name="member5RollNumber" class="form-input"
+                                    placeholder="Member 5 Roll Number" th:value="${prevMember5RollNumber}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: PAYMENT & DYNAMIC UPI QR CODE -->
+            <div class="form-section">
+                <div class="section-head">
+                    <div class="section-icon-wrap">&#128179;</div>
+                    <div>
+                        <h2>3. Registration Payment &amp; UTR Verification</h2>
+                        <p class="desc">Scan the dynamic QR code to pay the exact fee, then submit your transaction UTR.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="payment-box">
+                    <div class="payment-grid">
+                        <!-- Left: Official Standee QR Code -->
+                        <div class="qr-card">
+                            <!-- Standee Header Badge -->
+                            <div class="standee-header-badge">
+                                <span class="phonepe-dot"></span>
+                                <span>Official PhonePe UPI QR</span>
+                            </div>
+
+                            <!-- PhonePe Standee with Authentic Scannable Original QR -->
+                            <div class="phonepe-standee-wrapper">
+                                <img th:src="@{/images/payment.jpeg}" src="/images/payment.jpeg"
+                                    alt="PhonePe QR Standee - Shaik Sumaya" class="standee-bg-img" id="officialStandeeImg">
+                            </div>
+
+                            <!-- Payee Name & Verified UPI ID -->
+                            <div class="payee-box">
+                                <div class="payee-title">SHAIK SUMAYA</div>
+                                <div class="payee-upi-id">UPI ID : <strong>7981705559-4@ybl</strong></div>
+                                <div class="payee-phone">PhonePe / GPay : <strong>7981705559</strong></div>
+                            </div>
+
+                            <!-- Dynamic Amount Display -->
+                            <div class="amount-container">
+                                <div class="amount-badge" id="amountBadge">&#8377;300</div>
+                                <div class="amount-sub" id="amountSub">(&#8377;100 &times; 3 persons)</div>
+                            </div>
+
+                            <!-- UPI Actions & Quick Copy Options -->
+                            <div class="upi-details-wrap">
+                                <div class="upi-copy-row">
+                                    <button type="button" class="upi-copy-btn" id="copyUpiBtn" title="Click to copy UPI ID">
+                                        <span id="copyBtnText">7981705559-4@ybl</span>
+                                        <span>&#128203; Copy UPI</span>
+                                    </button>
+                                    <button type="button" class="upi-copy-btn phone-btn" id="copyPhoneBtn" title="Click to copy Mobile Number">
+                                        <span id="copyPhoneBtnText">7981705559</span>
+                                        <span>&#128222; Copy Mobile</span>
+                                    </button>
+                                </div>
+
+                                <div class="upi-actions-col">
+                                    <a id="upiPayLink"
+                                        href="upi://pay?pa=7981705559-4@ybl&amp;pn=Shaik%20%20Sumaya&amp;mc=0000&amp;mode=02&amp;purpose=00"
+                                        class="btn-upi-pay">
+                                        <span>&#128241; Tap to Pay &#8377;300 via UPI App</span> &rarr;
+                                    </a>
+                                    <div class="upi-pay-note" style="font-size: 0.72rem; color: var(--foam); text-align: center; margin-top: 0.35rem; opacity: 0.9;">
+                                        ⚡ Opens in UPI Scanner Mode &middot; Enter <strong>&#8377;<span id="amountHint">300</span></strong> to pay
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Security Decline Troubleshooting Box -->
+                            <div class="payment-help-alert">
+                                <div class="payment-help-title">
+                                    <span>&#9888;&#65039;</span> <strong>Declined for security reasons?</strong>
+                                </div>
+                                <p class="payment-help-text">
+                                    Banks often restrict browser payment links.
+                                    <br>
+                                    <strong>Solution:</strong> Open <strong>PhonePe</strong>, <strong>Google Pay</strong>, or <strong>Paytm</strong> directly &rarr; <strong>Scan the QR code above</strong> or send to Mobile Number <strong>7981705559</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Right: UTR & Payment Proof Upload -->
+                        <div>
+                            <div class="form-group" style="margin-bottom: 1.2rem;">
+                                <label class="form-label" for="utr">
+                                    <span>UPI Transaction Ref / UTR Number <span class="required">*</span></span>
+                                    <span class="hint">12-digit reference from GPay / PhonePe / Paytm</span>
+                                </label>
+                                <input type="text" id="utr" name="utr" class="form-input"
+                                    placeholder="e.g. 428901234567 or UPI Ref ID" th:value="${prevUtr}" required>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 1.2rem;">
+                                <label class="form-label">
+                                    <span>Upload Payment Screenshot Image <span class="required">*</span></span>
+                                    <span class="hint">JPG, PNG, or WebP screenshot</span>
+                                </label>
+                                <div class="file-upload-box">
+                                    <input type="file" id="paymentImage" name="paymentImage" class="file-upload-input"
+                                        accept="image/*" required>
+                                    <div id="uploadPrompt" style="color: var(--muted); font-size: 0.9rem;">
+                                        &#128247; Click or drag &amp; drop payment screenshot here
+                                    </div>
+                                    <img id="paymentPreview" class="preview-img" alt="Payment Screenshot Preview">
+                                </div>
+                            </div>
+
+                            <div
+                                style="font-size: 0.8rem; color: var(--muted); line-height: 1.5; background: rgba(2, 17, 31, 0.4); padding: 0.8rem; border-radius: 10px; border-left: 3px solid var(--aqua);">
+                                &#10003; Accepted through <strong>Google Pay, PhonePe, Paytm, BHIM, Cred</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: DECLARATION & SUBMISSION -->
+            <div class="form-section">
+                <div class="terms-agreement">
+                    <label class="checkbox-custom">
+                        <input type="checkbox" required>
+                        <span>
+                            I certify that the roll number, academic credentials, and payment UTR details provided are
+                            genuine.
+                            Our group agrees to abide by the rules of <strong>Odyssey 2026</strong> organized by E-Cell.
+                        </span>
+                    </label>
+                    <div
+                        style="margin-bottom: 1.2rem; background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(99, 102, 241, 0.12) 100%); border: 1px solid rgba(25, 211, 230, 0.3); border-radius: 12px; padding: 0.9rem 1.2rem; display: flex; align-items: center; gap: 0.9rem;">
+                        <div style="font-size: 1.6rem; flex-shrink: 0;">&#128197;</div>
+                        <div style="font-size: 0.85rem; color: var(--text); line-height: 1.4;">
+                            <strong style="color: #38bdf8;">Automatic Google Calendar Reminders:</strong>
+                            Upon issuing your boarding pass, Google Calendar event reminders will automatically be
+                            prepared for all registered group members so everyone gets notified on their phone for
+                            October 29 &amp; 30.
+                        </div>
+                    </div>
+
+                    <div class="submit-wrap">
+                        <button type="submit" id="submitBtn" class="btn-submit">
+                            <span>&#9875; Confirm &amp; Issue Odyssey Pass</span>
+                        </button>
+                    </div>
+                </div>
+        </form>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a
+                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a
+                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+    </footer>
+
+    <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
+    <script th:src="@{/js/register.js(v=8)}" src="/js/register.js?v=8"></script>
+</body>
+
+</html>

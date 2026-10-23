@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title
+        th:text="'Frequently Asked Questions (FAQ) | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
+        Frequently Asked Questions (FAQ) | Odyssey: Beyond the Horizon
+    </title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
+    <link rel="stylesheet" th:href="@{/css/faq.css(v=1)}" href="/css/faq.css?v=1">
+</head>
+
+<body class="faq-page">
+
+    <!-- Top Navigation Header -->
+    <nav class="nav">
+        <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo"
+                class="nav-logo-img">
+        </a>
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+        <ul id="navMenu">
+            <li><a th:href="@{/}" href="/">Home</a></li>
+            <li><a th:href="@{/register}" href="/register">Register Team</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find My Ticket</a></li>
+            <li><a th:href="@{/faq}" href="/faq" style="color: var(--aqua); font-weight: 600;">FAQ</a></li>
+            <li><a th:href="@{/student-response}" href="/student-response">Student Response</a></li>
+            <li><a th:href="@{/calendar}" href="/calendar">Calendar</a></li>
+        </ul>
+    </nav>
+
+    <main class="faq-container">
+        <!-- Hero Section -->
+        <header class="faq-hero">
+            <div class="faq-badge">
+                <span>&#10067;</span>
+                <span>Official Odyssey 2026 Knowledge Base</span>
+            </div>
+            <h1 class="faq-title">Frequently Asked Questions</h1>
+            <p class="faq-sub">
+                Everything you need to know about the Odyssey Founder’s Game simulation, eligibility, registration, team
+                formation, judging, and logistics.
+            </p>
+        </header>
+
+        <!-- Search & Category Filters -->
+        <section class="faq-controls" aria-label="FAQ Search and Filters">
+            <div class="faq-search-wrapper">
+                <span class="faq-search-icon">&#128269;</span>
+                <input type="text" id="faqSearchInput" class="faq-search-input"
+                    placeholder="Search any question or keyword (e.g. fee, team size, prize, certificate, CV Raman Hall)..."
+                    aria-label="Search FAQs" oninput="filterFaqs()">
+            </div>
+
+            <div class="faq-filter-row">
+                <div class="category-pills" role="tablist">
+                    <button type="button" class="cat-pill active" onclick="setCategory('all', this)">All Questions
+                        (20)</button>
+                    <button type="button" class="cat-pill" onclick="setCategory('objective', this)">About &amp;
+                        Objective</button>
+                    <button type="button" class="cat-pill" onclick="setCategory('teams', this)">Eligibility &amp;
+                        Teams</button>
+                    <button type="button" class="cat-pill" onclick="setCategory('registration', this)">Registration
+                        &amp; Fees</button>
+                    <button type="button" class="cat-pill" onclick="setCategory('funding', this)">Prizes &amp;
+                        Funding</button>
+                    <button type="button" class="cat-pill" onclick="setCategory('logistics', this)">Logistics &amp;
+                        Perks</button>
+                </div>
+
+                <div class="faq-toggle-actions">
+                    <button type="button" class="btn-toggle-all" onclick="expandAllFaqs()">Expand All</button>
+                    <button type="button" class="btn-toggle-all" onclick="collapseAllFaqs()">Collapse All</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- No Results Fallback -->
+        <div id="noResultsBox" class="no-results-box" role="status">
+            <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">&#128269;</div>
+            <h3 style="color: #ffffff; margin: 0 0 0.4rem 0;">No matching questions found</h3>
+            <p style="margin: 0;">Try searching with different keywords or switch back to the "All Questions" tab.</p>
+        </div>
+
+        <!-- 20 Official FAQ Items Accordion -->
+        <div class="faq-list" id="faqAccordionList">
+
+            <!-- 1 -->
+            <article class="faq-item" data-category="objective" id="faq-1">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-1')" aria-expanded="false"
+                    aria-controls="faq-ans-1">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">1</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">About &amp; Objective</span>
+                            <h2 class="faq-q-title">What is ODYSSEY, and what is its main objective?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-1">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> ODYSSEY's Founder’s Game is a two-day entrepreneurship simulation where
+                        teams develop a startup idea, understand customer needs, build a solution and an MVP or
+                        prototype, respond to changing business conditions, and pitch their startup to an investor
+                        panel. It helps participants develop problem-solving, strategic decision-making, adaptability,
+                        presentation, and communication skills.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 2 -->
+            <article class="faq-item" data-category="teams" id="faq-2">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-2')" aria-expanded="false"
+                    aria-controls="faq-ans-2">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">2</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Eligibility</span>
+                            <h2 class="faq-q-title">Who can participate in ODYSSEY?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-2">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> Second-year students who meet the event's participation requirements
+                        can participate. Students from different departments can form teams.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 3 -->
+            <article class="faq-item" data-category="objective" id="faq-3">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-3')" aria-expanded="false"
+                    aria-controls="faq-ans-3">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">3</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Activities</span>
+                            <h2 class="faq-q-title">What competitions or activities are included in ODYSSEY?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-3">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> The Founder’s Game includes startup formation, problem identification,
+                        customer research using provided information, solution development, a strategic condition
+                        challenge, MVP or prototype development, crisis response, team presentations, and an investor
+                        pitch.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 4 -->
+            <article class="faq-item" data-category="funding" id="faq-4">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-4')" aria-expanded="false"
+                    aria-controls="faq-ans-4">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">4</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Prizes</span>
+                            <h2 class="faq-q-title">What is the total prize money?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-4">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> The total prize pool will be announced by the organizers. Please check
+                        the official ODYSSEY website for confirmed prize details.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 5 -->
+            <article class="faq-item" data-category="funding" id="faq-5">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-5')" aria-expanded="false"
+                    aria-controls="faq-ans-5">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">5</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Funding &amp; Investment</span>
+                            <h2 class="faq-q-title">Will winners receive startup funding or investment?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-5">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> The Investor Pitch round is part of the startup simulation. Investment
+                        is treated as a simulated evaluation, and real funding is not guaranteed as part of the game.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 6 -->
+            <article class="faq-item" data-category="funding" id="faq-6">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-6')" aria-expanded="false"
+                    aria-controls="faq-ans-6">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">6</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Funding &amp; Investment</span>
+                            <h2 class="faq-q-title">What is the maximum funding available for a winning startup?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-6">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> ODYSSEY's Founder’s Game does not promise real startup funding as part
+                        of the simulation. Any separate funding opportunity, if officially announced, will be subject to
+                        its own terms and conditions.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 7 -->
+            <article class="faq-item" data-category="registration" id="faq-7">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-7')" aria-expanded="false"
+                    aria-controls="faq-ans-7">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">7</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Registration</span>
+                            <h2 class="faq-q-title">How can I register for ODYSSEY?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-7">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> Visit the official ODYSSEY website, open the registration section, fill
+                        in the required details, and submit the form. Follow the instructions displayed on the website
+                        to complete your registration.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 8 -->
+            <article class="faq-item" data-category="registration" id="faq-8">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-8')" aria-expanded="false"
+                    aria-controls="faq-ans-8">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">8</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Deadlines</span>
+                            <h2 class="faq-q-title">What is the last date for registration?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-8">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> The last date for online registration through the official ODYSSEY
+                        website is the 28th. On-spot registration may also be available on the morning of the 29th,
+                        subject to availability and the organizers' instructions.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 9 -->
+            <article class="faq-item" data-category="registration" id="faq-9">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-9')" aria-expanded="false"
+                    aria-controls="faq-ans-9">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">9</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Fees</span>
+                            <h2 class="faq-q-title">Is there a registration fee?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-9">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> The registration fee is &#8377;100 per participant. Please complete the
+                        payment through the official ODYSSEY website.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 10 -->
+            <article class="faq-item" data-category="registration" id="faq-10">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-10')" aria-expanded="false"
+                    aria-controls="faq-ans-10">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">10</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Payment</span>
+                            <h2 class="faq-q-title">How can I pay the registration fee?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-10">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> Use the official payment method provided on the registration page. If
+                        payment verification is required, upload your payment screenshot or enter the transaction ID as
+                        instructed.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 11 -->
+            <article class="faq-item" data-category="registration" id="faq-11">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-11')" aria-expanded="false"
+                    aria-controls="faq-ans-11">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">11</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Confirmation</span>
+                            <h2 class="faq-q-title">How can I confirm my registration and payment?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-11">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> After completing your registration on the official ODYSSEY website, you
+                        will be redirected to a confirmation page displaying all your registration details. You can also
+                        download your registration details from that page for future reference.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 12 -->
+            <article class="faq-item" data-category="teams" id="faq-12">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-12')" aria-expanded="false"
+                    aria-controls="faq-ans-12">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">12</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Eligibility</span>
+                            <h2 class="faq-q-title">Can students from other colleges participate?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-12">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> No. ODYSSEY is open only to eligible students from the organizing
+                        institution. Students from other colleges are not allowed to participate.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 13 -->
+            <article class="faq-item" data-category="teams" id="faq-13">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-13')" aria-expanded="false"
+                    aria-controls="faq-ans-13">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">13</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Team Structure</span>
+                            <h2 class="faq-q-title">Can I participate individually?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-13">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> No. Individual participation is not allowed. Every participant must be
+                        part of a team.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 14 -->
+            <article class="faq-item" data-category="teams" id="faq-14">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-14')" aria-expanded="false"
+                    aria-controls="faq-ans-14">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">14</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Team Size</span>
+                            <h2 class="faq-q-title">What is the minimum and maximum team size?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-14">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> Each team must have a minimum of four members. There is no specified
+                        maximum team size.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 15 -->
+            <article class="faq-item" data-category="teams" id="faq-15">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-15')" aria-expanded="false"
+                    aria-controls="faq-ans-15">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">15</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Team Diversity</span>
+                            <h2 class="faq-q-title">Can students from different departments form a team?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-15">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> Yes! Students from different departments can form a team and
+                        collaborate to develop their startup ideas.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 16 -->
+            <article class="faq-item" data-category="objective" id="faq-16">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-16')" aria-expanded="false"
+                    aria-controls="faq-ans-16">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">16</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Judging &amp; Evaluation</span>
+                            <h2 class="faq-q-title">What are the rules and judging criteria?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-16">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> Teams will be evaluated on problem understanding, customer insights,
+                        solution quality, business model, MVP or prototype, strategic decisions, crisis response,
+                        feasibility, and their ability to answer investor questions.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 17 -->
+            <article class="faq-item" data-category="logistics" id="faq-17">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-17')" aria-expanded="false"
+                    aria-controls="faq-ans-17">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">17</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Certificates</span>
+                            <h2 class="faq-q-title">Will all participants receive certificates?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-17">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> Yes, all participants who meet the event's participation requirements
+                        will receive a participation certificate.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 18 -->
+            <article class="faq-item" data-category="logistics" id="faq-18">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-18')" aria-expanded="false"
+                    aria-controls="faq-ans-18">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">18</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Venue &amp; Amenities</span>
+                            <h2 class="faq-q-title">Will accommodation and food be provided?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-18">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> ODYSSEY is a daytime event conducted at CV Raman Hall, so accommodation
+                        will not be provided. Snacks will be provided to participants during the event. Food will not be
+                        provided.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 19 -->
+            <article class="faq-item" data-category="logistics" id="faq-19">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-19')" aria-expanded="false"
+                    aria-controls="faq-ans-19">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">19</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Schedule &amp; Location</span>
+                            <h2 class="faq-q-title">When and where will the event take place?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-19">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> ODYSSEY will take place at CV Raman Hall. The event date and reporting
+                        time will be announced through the official website.
+                    </div>
+                </div>
+            </article>
+
+            <!-- 20 -->
+            <article class="faq-item" data-category="logistics" id="faq-20">
+                <button type="button" class="faq-question-btn" onclick="toggleFaq('faq-20')" aria-expanded="false"
+                    aria-controls="faq-ans-20">
+                    <div class="faq-q-left">
+                        <span class="faq-q-num">20</span>
+                        <div class="faq-q-text-wrap">
+                            <span class="faq-q-tag">Support &amp; Contact</span>
+                            <h2 class="faq-q-title">Whom should I contact if my question is not answered here?</h2>
+                        </div>
+                    </div>
+                    <div class="faq-icon-arrow">&#9662;</div>
+                </button>
+                <div class="faq-answer" id="faq-ans-20">
+                    <div class="faq-answer-inner">
+                        <strong>Answer:</strong> If you have any further questions or doubts, you can connect with us
+                        through our official E-Cell Instagram page. Our team will assist you with your queries.
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Bottom Assistance Card -->
+        <section class="faq-bottom-card">
+            <div class="faq-bottom-text">
+                <h3>Still have doubts about Odyssey?</h3>
+                <p>Connect with the student organizers and team mentors directly on our Instagram page.</p>
+            </div>
+            <div class="faq-bottom-actions">
+                <a href="https://www.instagram.com/kits_ecell/" target="_blank" rel="noopener noreferrer"
+                    class="btn-insta">
+                    <span>&#128248;</span>
+                    <span>DM on Instagram</span>
+                </a>
+                <a th:href="@{/register}" href="/register" class="btn-reg-faq">
+                    <span>&#128640;</span>
+                    <span>Register Team Now</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a href="https://kitsecellgnt.com/"
+                target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/"
+                target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+    </footer>
+
+    <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
+    <script th:src="@{/js/faq.js(v=1)}" src="/js/faq.js?v=1"></script>
+</body>
+
+</html>

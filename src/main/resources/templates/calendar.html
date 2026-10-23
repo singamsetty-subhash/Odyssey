@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Calendar &amp; Schedule | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
+        Calendar &amp; Schedule | Odyssey: Beyond the Horizon
+    </title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
+    <link rel="stylesheet" th:href="@{/css/calendar.css(v=12)}" href="/css/calendar.css?v=12">
+</head>
+
+<body class="calendar-page">
+
+    <!-- Navbar -->
+    <nav class="nav">
+        <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo" class="nav-logo-img">
+        </a>
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+        <ul id="navMenu">
+            <li><a th:href="@{/}" href="/">Home</a></li>
+            <li><a th:href="@{/#about}" href="/#about">About</a></li>
+            <li><a th:href="@{/#stages}" href="/#stages">Stages</a></li>
+            <li><a th:href="@{/calendar}" href="/calendar" style="color: var(--aqua); font-weight: 700;">Calendar</a></li>
+            <li><a th:href="@{/faq}" href="/faq">FAQ</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find Ticket</a></li>
+            <li><a th:href="@{/student-response}" href="/student-response">Feedback</a></li>
+            <li><a th:href="@{/register}" href="/register" class="nav-reg-btn">Register</a></li>
+        </ul>
+    </nav>
+
+    <main class="calendar-container">
+        <!-- Return Link -->
+        <a th:href="@{/}" href="/" class="nav-back-link">
+            &larr; Return to Odyssey Overview
+        </a>
+
+        <!-- Header -->
+        <header class="cal-header">
+            <div class="cal-badge">
+                <span>&#9875; Official Odyssey Manifest &middot; October 29 &amp; 30, 2026 &middot; CV Raman Hall, KITS</span>
+            </div>
+            <h1>Odyssey Calendar &amp; Master Schedule</h1>
+            <p>
+                Track every stage of the flagship entrepreneurial journey. Explore the interactive calendar,
+                hourly tournament agendas for Day 1 &amp; Day 2, and sync all rounds to your personal calendar.
+            </p>
+
+            <!-- Countdown Timer Strip -->
+            <div class="countdown-strip">
+                <div class="countdown-box">
+                    <div class="countdown-num" id="countDays">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-box">
+                    <div class="countdown-num" id="countHours">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-box">
+                    <div class="countdown-num" id="countMinutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-box">
+                    <div class="countdown-num" id="countSeconds">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            <div style="margin-top: 0.85rem; font-size: 0.85rem; color: var(--aqua); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
+                &#9201; Countdown to Odyssey Kickoff &middot; October 29, 2026 @ 10:00 AM IST (Andhra Pradesh / UTC+05:30)
+            </div>
+
+            <!-- Live Andhra Pradesh Timezone Clock -->
+            <div class="ap-tz-pill">
+                <span class="ap-tz-icon">&#128205;</span>
+                <span class="ap-tz-text">Andhra Pradesh Time (IST &middot; UTC+05:30):</span>
+                <span id="apLiveClock" class="ap-tz-clock">Loading AP Time...</span>
+            </div>
+        </header>
+
+        <!-- Interactive Control Toolbar -->
+        <div class="cal-toolbar">
+            <!-- View Mode Switcher -->
+            <div class="view-mode-tabs" role="tablist">
+                <button type="button" class="view-btn active" data-view="viewMonthly" role="tab" id="tabMonthly">
+                    <span>&#128197;</span> Monthly Grid
+                </button>
+                <button type="button" class="view-btn" data-view="viewAgenda" role="tab" id="tabAgenda">
+                    <span>&#9201;</span> Hourly Agenda (Rounds 1–9)
+                </button>
+                <button type="button" class="view-btn" data-view="viewMilestones" role="tab" id="tabMilestones">
+                    <span>&#128205;</span> Roadmap
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Search and Filter Bar -->
+        <div class="search-filter-wrap">
+            <input type="text" id="calSearchInput" class="cal-search-input" placeholder="&#128269; Search rounds, topics, breaks (e.g. Customer, Crisis, Pitch)...">
+
+            <div class="category-pills">
+                <button type="button" class="category-pill active" data-category="all">All Events</button>
+                <button type="button" class="category-pill" data-category="round">Rounds 1–9</button>
+                <button type="button" class="category-pill" data-category="keynote">Keynotes &amp; Pitches</button>
+                <button type="button" class="category-pill" data-category="break">Breaks</button>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW 1: MONTHLY INTERACTIVE CALENDAR GRID
+             ========================================== -->
+        <section id="viewMonthly" class="calendar-view-section active">
+            <div class="calendar-grid-card">
+                <div class="month-nav-header">
+                    <h2 class="month-title" id="calendarMonthTitle">October 2026</h2>
+                    <div class="month-arrows">
+                        <button type="button" class="arrow-btn" id="prevMonthBtn" aria-label="Previous Month">&larr;</button>
+                        <button type="button" class="arrow-btn" id="nextMonthBtn" aria-label="Next Month">&rarr;</button>
+                    </div>
+                </div>
+
+                <!-- Days of Week Header -->
+                <div class="weekdays-grid">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+
+                <!-- Dynamic Days Grid -->
+                <div class="days-grid" id="calendarDaysGrid">
+                    <!-- Populated via calendar.js -->
+                </div>
+
+                <!-- Selected Day Inspection Drawer -->
+                <div class="selected-day-details" id="selectedDayDetails">
+                    <div class="selected-day-header">
+                        <h3 class="selected-day-title" id="selectedDayTitle">Manifest Schedule</h3>
+                    </div>
+                    <div id="selectedDayContent">
+                        <!-- Populated via calendar.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 2: HOURLY MASTER AGENDA (DAY 1 & 2)
+             ========================================== -->
+        <section id="viewAgenda" class="calendar-view-section">
+            <!-- Day 1 & Day 2 Toggle Switcher -->
+            <div class="agenda-day-switcher">
+                <button type="button" class="agenda-day-btn active" data-day="day1">
+                    <span>&#128197;</span> Day 1 &middot; Oct 29, 2026 (10:00 AM – 5:00 PM IST)
+                </button>
+                <button type="button" class="agenda-day-btn" data-day="day2">
+                    <span>&#127919;</span> Day 2 &middot; Oct 30, 2026 (10:00 AM – 5:00 PM IST)
+                </button>
+            </div>
+
+            <!-- Day 1 Timeline Panel -->
+            <div id="agendaDAY1" class="agenda-day-panel" style="display: block;">
+                <div class="agenda-timeline">
+                    <!-- Round 1 -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 10:00 – 10:15 AM IST</span>
+                            <div class="agenda-venue">&#128205; CV Raman Hall &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Round 1</span>
+                                <span style="font-size: 0.75rem; color: var(--muted);">Stage 1: The Departure</span>
+                            </div>
+                            <h3 class="agenda-title">Round 1: Launch &amp; Orientation</h3>
+                            <p class="agenda-desc">Official Odyssey kickoff, welcome address by KITS E-Cell leadership, event rules briefing, and team manifest verification.</p>
+                        </div>
+                    </article>
+
+                    <!-- Round 2 -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 10:15 – 10:35 AM IST</span>
+                            <div class="agenda-venue">&#128205; Innovation Arena &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Round 2</span>
+                                <span style="font-size: 0.75rem; color: var(--muted);">Problem Discovery</span>
+                            </div>
+                            <h3 class="agenda-title">Round 2: Problem Drop</h3>
+                            <p class="agenda-desc">Sealed real-world industry problem statements are unveiled to each team. Crews brainstorm core pain points and establish their initial hypothesis.</p>
+                        </div>
+                    </article>
+
+                    <!-- Round 3 -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 10:35 – 11:35 AM IST</span>
+                            <div class="agenda-venue">&#128205; Campus &amp; Labs &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Round 3</span>
+                                <span style="font-size: 0.75rem; color: var(--muted);">Customer Discovery</span>
+                            </div>
+                            <h3 class="agenda-title">Round 3: Customer Hunt</h3>
+                            <p class="agenda-desc">Field validation round. Gather verified customer-review slips from designated coordinators and simulated end-users to test value proposition viability.</p>
+                        </div>
+                    </article>
+
+                    <!-- Round 4 -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 11:35 AM – 1:00 PM IST</span>
+                            <div class="agenda-venue">&#128205; E-Cell Co-Working Lab &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Round 4</span>
+                                <span style="font-size: 0.75rem; color: var(--muted);">Stage 2: Into the Unknown</span>
+                            </div>
+                            <h3 class="agenda-title">Round 4: Solution Lab &amp; MVP Blueprint</h3>
+                            <p class="agenda-desc">Define customer segments, draft the lean canvas, design product wireframes or architecture, and finalize the Minimum Viable Product (MVP) scope.</p>
+                        </div>
+                    </article>
+
+                    <!-- Lunch Break -->
+                    <article class="agenda-card break-item" data-category="break">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#127857; 1:00 – 2:00 PM IST</span>
+                            <div class="agenda-venue">&#128205; Food Court &amp; Lounge &middot; KITS Guntur</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag break">Networking Break</span>
+                            </div>
+                            <h3 class="agenda-title">&#127857; Lunch &amp; Peer Networking</h3>
+                            <p class="agenda-desc">Recharge, exchange perspectives across student ventures, and collaborate with visiting mentors.</p>
+                        </div>
+                    </article>
+
+                    <!-- Round 5 -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 2:00 – 3:00 PM IST</span>
+                            <div class="agenda-venue">&#128205; Strategy Chambers &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Round 5</span>
+                                <span style="font-size: 0.75rem; color: var(--muted);">The Pivot Test</span>
+                            </div>
+                            <h3 class="agenda-title">Round 5: Strategic Condition Challenge</h3>
+                            <p class="agenda-desc">Surprise twist: Each crew receives an unforeseen market regulation, supply disruption, or budget cut. Teams must pivot their operational strategy within 60 minutes.</p>
+                        </div>
+                    </article>
+
+                    <!-- Round 6 -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 3:00 – 5:00 PM IST</span>
+                            <div class="agenda-venue">&#128205; Innovation Arena &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Round 6</span>
+                                <span style="font-size: 0.75rem; color: var(--muted);">Stage 3: The Trial of Tides</span>
+                            </div>
+                            <h3 class="agenda-title">Round 6: Prototype Sprint &amp; Deck Preparation</h3>
+                            <p class="agenda-desc">Final build sprint of Day 1. Finalize working prototypes, pitch decks, financial estimations, and submit Day 1 checkpoint deliverables.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- Day 2 Timeline Panel -->
+            <div id="agendaDAY2" class="agenda-day-panel" style="display: none;">
+                <div class="agenda-timeline">
+                    <!-- Round 7 -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 10:00 – 11:30 AM IST</span>
+                            <div class="agenda-venue">&#128205; Strategy Chambers &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Round 7</span>
+                                <span style="font-size: 0.75rem; color: #ef4444;">High Stakes</span>
+                            </div>
+                            <h3 class="agenda-title">Round 7: Crisis Envelope / Market Shock</h3>
+                            <p class="agenda-desc">Real-time simulation of market crashes, competitor aggression, or severe PR emergencies. Crews present emergency mitigation steps under intense pressure.</p>
+                        </div>
+                    </article>
+
+                    <!-- Preparation -->
+                    <article class="agenda-card" data-category="round">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 11:30 AM – 1:00 PM IST</span>
+                            <div class="agenda-venue">&#128205; E-Cell Co-Working Lab &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag round">Pre-Pitch Prep</span>
+                            </div>
+                            <h3 class="agenda-title">Deck Finalization &amp; File Verification</h3>
+                            <p class="agenda-desc">Rehearse presentations, polish audio-visual assets, and officially lock presentation files with the technical desk.</p>
+                        </div>
+                    </article>
+
+                    <!-- Lunch Break -->
+                    <article class="agenda-card break-item" data-category="break">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#127857; 1:00 – 2:00 PM IST</span>
+                            <div class="agenda-venue">&#128205; Food Court &amp; Lounge &middot; KITS Guntur</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag break">Networking Break</span>
+                            </div>
+                            <h3 class="agenda-title">&#127857; Lunch &amp; Mentor Office Hours</h3>
+                            <p class="agenda-desc">Final strategy alignment and feedback session with industry jury members.</p>
+                        </div>
+                    </article>
+
+                    <!-- Round 8 -->
+                    <article class="agenda-card" data-category="keynote">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 2:00 – 3:30 PM IST</span>
+                            <div class="agenda-venue">&#128205; Auditorium A &amp; B &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag keynote">Round 8</span>
+                                <span style="font-size: 0.75rem; color: var(--purple-light);">Peer Showcase</span>
+                            </div>
+                            <h3 class="agenda-title">Round 8: Team Presentations &amp; Cross-Evaluation</h3>
+                            <p class="agenda-desc">Teams deliver rapid 5-minute pitches followed by audience Q&amp;A and cross-team valuation feedback.</p>
+                        </div>
+                    </article>
+
+                    <!-- Round 9 -->
+                    <article class="agenda-card" data-category="keynote">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge">&#9200; 3:30 – 4:30 PM IST</span>
+                            <div class="agenda-venue">&#128205; Grand Stage &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag keynote">Round 9</span>
+                                <span style="font-size: 0.75rem; color: var(--gold-light);">Investor Arena</span>
+                            </div>
+                            <h3 class="agenda-title">Round 9: The Investor Pitch</h3>
+                            <p class="agenda-desc">Top ventures pitch directly to venture capitalists, startup incubators, and industry leaders to secure virtual seed investments and prize allocation.</p>
+                        </div>
+                    </article>
+
+                    <!-- Grand Finale -->
+                    <article class="agenda-card finale-item" data-category="keynote">
+                        <div class="agenda-time-col">
+                            <span class="agenda-time-badge" style="color: var(--gold); border-color: rgba(250, 204, 21, 0.5);">&#127942; 4:30 – 5:00 PM IST</span>
+                            <div class="agenda-venue" style="color: var(--gold-light);">&#128205; Grand Stage &middot; KITS Guntur (AP)</div>
+                        </div>
+                        <div class="agenda-content-col">
+                            <div class="agenda-meta-row">
+                                <span class="agenda-tag break" style="background: rgba(250, 204, 21, 0.2); color: var(--gold);">Grand Finale</span>
+                                <span style="font-size: 0.75rem; color: #ffffff;">Stage 4: Beyond the Horizon</span>
+                            </div>
+                            <h3 class="agenda-title" style="color: var(--gold-light);">&#127942; Awards, Incubation Offers &amp; Closing Ceremony</h3>
+                            <p class="agenda-desc" style="color: #ffffff;">Score consolidation, announcement of Champions, Runner-ups, Best MVP, and presentation of Odyssey trophies and incubation support.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 3: MILESTONES ROADMAP
+             ========================================== -->
+        <section id="viewMilestones" class="calendar-view-section">
+            <div class="milestones-wrapper">
+                <div class="milestones-line"></div>
+
+                <!-- Milestone 1 -->
+                <div class="milestone-node">
+                    <div class="milestone-dot completed">&#10003;</div>
+                    <div class="milestone-box">
+                        <div class="milestone-date-tag">Phase 1 &middot; Registrations Active</div>
+                        <h3>Official Crew Enrollment</h3>
+                        <p>Registration portal opens at &#8377;100 per person (groups of 3 to 5 participants). Instant issuance of Digital Odyssey Boarding Passes with live UPI payment verification.</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="milestone-node">
+                    <div class="milestone-dot purple">&#9679;</div>
+                    <div class="milestone-box">
+                        <div class="milestone-date-tag" style="color: var(--purple-light);">Phase 2 &middot; Pre-Odyssey Briefing</div>
+                        <h3>Team Strategy &amp; Rules Orientation</h3>
+                        <p>Virtual briefing session covering evaluation criteria, team roles (Hacker, Hustler, Designer), problem domain distribution, and event guidelines.</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="milestone-node">
+                    <div class="milestone-dot gold">&#9679;</div>
+                    <div class="milestone-box">
+                        <div class="milestone-date-tag" style="color: var(--gold);">Phase 3 &middot; Oct 29, 2026 (Day 1)</div>
+                        <h3>Launch, Problem Drops &amp; Market Validation</h3>
+                        <p>Rounds 1 to 6 unfold live on campus. Customer hunting, lean canvas drafting, and the unexpected Strategic Condition Challenge.</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 4 -->
+                <div class="milestone-node">
+                    <div class="milestone-dot gold">&#9679;</div>
+                    <div class="milestone-box">
+                        <div class="milestone-date-tag" style="color: var(--gold);">Phase 4 &middot; Oct 30, 2026 (Day 2)</div>
+                        <h3>Crisis Simulation &amp; Investor Arena</h3>
+                        <p>Market shock envelopes, peer presentations, and the final high-stakes Investor Pitch before the closing Awards Gala.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cal-cta-section">
+            <h2>Ready to Embark on Your Entrepreneurial Odyssey?</h2>
+            <p>Assemble your team of 3 to 5 members, register before the manifest closes, and receive your official Odyssey Boarding Pass.</p>
+            <a th:href="@{/register}" href="/register" class="cal-register-btn">
+                <span>&#9875;</span> Enlist Your Crew Now
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 <span th:text="${eventName != null ? eventName : 'Odyssey'}">Odyssey</span> &middot; Designed and Developed by <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
+    <script th:src="@{/js/calendar.js(v=6)}" src="/js/calendar.js?v=6"></script>
+</body>
+</html>

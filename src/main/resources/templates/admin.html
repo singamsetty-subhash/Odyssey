@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Odyssey Manifest Database | ' + ${eventName}">Odyssey Manifest Database | Odyssey</title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
+    <link rel="stylesheet" th:href="@{/css/register.css}" href="/css/register.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}" href="/css/admin.css?v=2">
+</head>
+<body class="admin-page">
+
+<nav class="nav">
+    <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
+        <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo" class="nav-logo-img">
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+    </button>
+    <ul id="navMenu">
+        <li><a th:href="@{/}" href="/">Home</a></li>
+        <li><a th:href="@{/register}" href="/register">Register Team</a></li>
+        <li><a th:href="@{/admin/registrations}" href="/admin/registrations" style="color: var(--aqua); font-weight: 600;">Database Manifest</a></li>
+        <li><a th:href="@{/admin/responses}" href="/admin/responses" style="color: var(--foam); font-weight: 500;">💬 Student Responses</a></li>
+        <li>
+            <div id="sessionInactivityBadge" class="session-inactivity-badge" title="Auto-logout after 30 minutes of no mouse or keyboard activity">
+                <span class="session-inactivity-dot"></span>
+                <span>Security: <strong id="sessionTimerText" style="color: var(--foam);">30m</strong></span>
+            </div>
+        </li>
+        <li><a th:href="@{/admin/logout}" href="/admin/logout" style="color: #ff7675; font-weight: 600;">&#128274; Logout</a></li>
+    </ul>
+</nav>
+
+<div class="admin-top">
+    <div class="admin-title-box">
+        <h1>Odyssey Database Manifest</h1>
+        <p>Live synchronized records stored in PostgreSQL Database (Supabase) with JPA</p>
+    </div>
+    <div class="admin-actions">
+        <a th:href="@{/admin/responses}" class="admin-btn" style="background: rgba(25, 211, 230, 0.18); border-color: rgba(25, 211, 230, 0.45); color: var(--aqua); font-weight: 600;">
+            <span>💬 Student Responses</span>
+        </a>
+        <!-- Export Center Dropdown -->
+        <div class="export-dropdown-wrap">
+            <button type="button" class="admin-btn" id="btnExportToggle" onclick="toggleExportDropdown(event)"
+                style="background: rgba(46, 204, 113, 0.2); border-color: rgba(46, 204, 113, 0.55); color: #4ade80; font-weight: 600;">
+                <span>&#128229; Export Options &#9662;</span>
+            </button>
+            <div id="exportDropdown" class="export-menu" style="display: none;">
+                <div class="export-menu-header">Total Export (All Departments)</div>
+                <a th:href="@{/admin/export/csv}" class="export-menu-item">
+                    <span class="export-item-icon">&#128202;</span>
+                    <div class="export-item-text">
+                        <strong>Export Total to Excel (.csv)</strong>
+                        <small>Complete manifest &middot; UTF-8 Excel BOM</small>
+                    </div>
+                </a>
+                <a th:href="@{/admin/export/excel}" class="export-menu-item">
+                    <span class="export-item-icon">&#128196;</span>
+                    <div class="export-item-text">
+                        <strong>Export Total to Excel (.xls)</strong>
+                        <small>Native styled spreadsheet workbook</small>
+                    </div>
+                </a>
+                <a th:href="@{/admin/export/json}" class="export-menu-item">
+                    <span class="export-item-icon">&#128190;</span>
+                    <div class="export-item-text">
+                        <strong>Export Total to JSON (.json)</strong>
+                        <small>Structured raw developer data</small>
+                    </div>
+                </a>
+
+                <div class="export-menu-divider"></div>
+                <div class="export-menu-header">Department-Wise Quick Export</div>
+                <div class="dept-quick-scroll">
+                    <div th:each="entry : ${deptCounts}" class="dept-quick-row">
+                        <span class="mini-badge" th:text="${entry.key}">CSE</span>
+                        <span style="font-size: 0.72rem; color: var(--muted);" th:text="${entry.value} + ' students'">7 students</span>
+                        <div style="display: flex; gap: 0.3rem;">
+                            <a th:href="@{/admin/export/csv(dept=${entry.key})}" class="mini-dl-chip" title="Export CSV">CSV</a>
+                            <a th:href="@{/admin/export/excel(dept=${entry.key})}" class="mini-dl-chip" title="Export XLS">XLS</a>
+                            <a th:href="@{/admin/export/json(dept=${entry.key})}" class="mini-dl-chip" title="Export JSON">JSON</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-menu-divider"></div>
+                <button type="button" onclick="window.print()" class="export-menu-item" style="width: 100%; border: none; background: transparent; text-align: left; cursor: pointer;">
+                    <span class="export-item-icon">&#128424;</span>
+                    <div class="export-item-text">
+                        <strong>Print / Save as PDF</strong>
+                        <small>Clean printer-friendly table report</small>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <a th:href="@{/api/registrations}" target="_blank" class="admin-btn">
+            <span>&#128190; View JSON API</span>
+        </a>
+        <a th:href="@{/register}" class="admin-btn" style="background: var(--aqua); color: var(--deep); font-weight: 600;">
+            <span>&#43; New Registration</span>
+        </a>
+        <a th:href="@{/admin/logout}" class="admin-btn" style="border-color: rgba(255, 118, 117, 0.45); color: #ff9aa2;">
+            <span>&#128274; Logout</span>
+        </a>
+    </div>
+</div>
+
+<div th:if="${successMessage}" style="background: rgba(34, 197, 94, 0.16); border: 1.5px solid rgba(34, 197, 94, 0.55); color: #86efac; padding: 1rem 1.4rem; border-radius: 14px; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 0.8rem; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);">
+    <span style="font-size: 1.3rem;">&#9989;</span>
+    <span th:text="${successMessage}">Record deleted successfully.</span>
+</div>
+<div th:if="${errorMessage}" style="background: rgba(239, 68, 68, 0.16); border: 1.5px solid rgba(239, 68, 68, 0.55); color: #fca5a5; padding: 1rem 1.4rem; border-radius: 14px; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 0.8rem; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
+    <span style="font-size: 1.3rem;">&#9888;</span>
+    <span th:text="${errorMessage}">An error occurred.</span>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-title">Total Enlisted Participants</div>
+        <div class="stat-card-val" th:text="${totalCount}">0</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-title">Participating Branches</div>
+        <div class="stat-card-val" th:text="${deptCounts != null ? deptCounts.size() : 0}">0</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-title">Teams Registered</div>
+        <div class="stat-card-val" th:text="${totalTeams != null ? totalTeams : 0}">0</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-title">Database Engine</div>
+        <div class="stat-card-val" style="font-size: 1.4rem; padding-top: 0.4rem; color: var(--foam);">PostgreSQL (Supabase)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-title">Total Amount Received (Online)</div>
+        <div class="stat-card-val" id="totalAmountReceivedVal" style="color: #4ade80;"
+             th:attr="data-server-amount=${totalAmountReceived}"
+             th:text="'&#8377;' + (${totalAmountReceived != null and totalAmountReceived > 0} ? ${totalAmountReceived} : 0)">&#8377;0</div>
+    </div>
+</div>
+
+<!-- Department-Wise Participation Census Section -->
+<div class="dept-census-section">
+    <div class="dept-census-header">
+        <div>
+            <h2 class="dept-census-title">
+                <span>&#127891;</span> Department-Wise Participation Breakdown
+            </h2>
+            <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: var(--muted);">
+                Live participant counts categorized by branch &middot; Click any department card to filter manifest records
+            </p>
+        </div>
+        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
+            <button type="button" id="btnResetFilter" onclick="filterByDept('ALL')"
+                style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 1rem; border-radius: 50px; background: rgba(25, 211, 230, 0.15); border: 1px solid rgba(25, 211, 230, 0.35); color: var(--foam); font-size: 0.82rem; cursor: pointer; transition: all 0.2s;">
+                <span>Show All (<span th:text="${totalCount}">0</span>)</span>
+            </button>
+            <span id="activeFilterBadge" style="display: none; font-size: 0.8rem; background: rgba(25, 211, 230, 0.25); color: #ffffff; padding: 0.3rem 0.8rem; border-radius: 50px; border: 1px solid var(--aqua);">
+                Filtered by: <strong id="filterDeptName" style="color: var(--aqua);">ALL</strong>
+            </span>
+            <a id="btnExportDynamicCsv" th:href="@{/admin/export/csv}" class="admin-btn"
+                style="padding: 0.45rem 0.95rem; font-size: 0.8rem; background: rgba(46, 204, 113, 0.18); border-color: rgba(46, 204, 113, 0.45); color: #4ade80;">
+                <span>&#128202; Export Total Excel (.csv)</span>
+            </a>
+            <a id="btnExportDynamicExcel" th:href="@{/admin/export/excel}" class="admin-btn"
+                style="padding: 0.45rem 0.95rem; font-size: 0.8rem; background: rgba(25, 211, 230, 0.15); border-color: rgba(25, 211, 230, 0.4); color: var(--foam);">
+                <span>&#128196; Export Total Excel (.xls)</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="dept-grid">
+        <div th:each="entry : ${deptCounts}" class="dept-card"
+             th:attr="data-dept=${entry.key}">
+            <div th:attr="onclick='filterByDept(\'' + ${entry.key} + '\')'" style="cursor: pointer;">
+                <div class="dept-card-top">
+                    <span class="dept-name" th:text="${entry.key}">CSE</span>
+                    <span class="dept-pct" th:text="${totalCount > 0 ? #numbers.formatDecimal((entry.value * 100.0) / totalCount, 1, 1) + '%' : '0%'}">0%</span>
+                </div>
+                <div class="dept-val" th:text="${entry.value}">0</div>
+                <div class="dept-sub">
+                    <span>Enrolled</span>
+                    <span class="filter-hint">Filter Table &darr;</span>
+                </div>
+            </div>
+            <!-- Mini Export Actions -->
+            <div style="margin-top: 0.65rem; padding-top: 0.55rem; border-top: 1px solid rgba(25, 211, 230, 0.15); display: flex; gap: 0.35rem; justify-content: flex-end;">
+                <a th:href="@{/admin/export/csv(dept=${entry.key})}" class="dept-pill-export" title="Export this department as CSV">
+                    <span>&#128229; CSV</span>
+                </a>
+                <a th:href="@{/admin/export/excel(dept=${entry.key})}" class="dept-pill-export" title="Export this department as Excel XLS">
+                    <span>&#128202; Excel</span>
+                </a>
+                <a th:href="@{/admin/export/json(dept=${entry.key})}" class="dept-pill-export" title="Export this department as JSON">
+                    <span>JSON</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-card">
+    <div th:if="${registrations.empty}" class="empty-state">
+        <div style="font-size: 3rem; margin-bottom: 0.8rem;">&#9875;</div>
+        <h3>No Registered Ventures Yet</h3>
+        <p>Once teams register via the registration page, their records will automatically persist and appear here.</p>
+        <div style="margin-top: 1.5rem;">
+            <a th:href="@{/register}" class="btn">Register First Team</a>
+        </div>
+    </div>
+
+    <div th:unless="${registrations.empty}" class="table-responsive">
+        <table class="manifest-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center; white-space: nowrap;">S.No</th>
+                    <th style="white-space: nowrap;">Pass ID</th>
+                    <th style="white-space: nowrap;">Roll No</th>
+                    <th>Student Name</th>
+                    <th>Dept, Year &amp; Sec</th>
+                    <th>Phone &amp; Email</th>
+                    <th style="white-space: nowrap;">Group Size</th>
+                    <th style="white-space: nowrap;">Fee Paid</th>
+                    <th>UTR Ref</th>
+                    <th>Payment Proof</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r, iterStat : ${registrations}"
+                    th:attr="data-dept=${r.dept}"
+                    th:classappend="${(r.participantRole == null or r.participantRole == 'Leader' or r.participantRole == '' or !r.id.contains('-M')) and iterStat.index > 0} ? 'team-separator' : ''">
+                    <td style="text-align: center; color: var(--muted); font-weight: 600; white-space: nowrap;" class="sno-cell" th:text="${iterStat.count}">1</td>
+                    <td style="white-space: nowrap;">
+                        <span th:if="${r.id.contains('-M')}" style="color: var(--muted); font-size: 0.82rem; margin-right: 0.25rem;">&#8627;</span>
+                        <a th:href="@{'/register/pass/' + ${r.id}}" class="code-link" style="white-space: nowrap; display: inline-block;" th:text="${r.id}">ODY-1234</a>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <strong style="color: var(--aqua);" th:text="${r.rollNumber}">B21CS042</strong>
+                    </td>
+                    <td>
+                        <div style="color: #ffffff; font-weight: 600;" th:text="${r.leaderName}">Rahul Sharma</div>
+                        <div style="margin-top: 0.3rem; display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+                            <span th:if="${r.participantRole == null or r.participantRole == 'Leader' or r.participantRole == '' or !r.id.contains('-M')}"
+                                  class="track-tag" style="font-size: 0.68rem; padding: 0.15rem 0.55rem; background: rgba(34, 197, 94, 0.18); border-color: rgba(34, 197, 94, 0.45); color: #4ade80; font-weight: 700;">
+                                &#128081; Leader
+                            </span>
+                            <span th:unless="${r.participantRole == null or r.participantRole == 'Leader' or r.participantRole == '' or !r.id.contains('-M')}"
+                                  class="track-tag" style="font-size: 0.68rem; padding: 0.12rem 0.5rem; background: rgba(14, 165, 233, 0.15); border-color: rgba(25, 211, 230, 0.3); color: var(--aqua);"
+                                  th:text="${r.participantRole != null and !r.participantRole.isBlank() ? r.participantRole : 'Member'}">
+                                Member
+                            </span>
+                            <span style="font-size: 0.76rem; font-weight: 600; color: var(--foam); background: rgba(14, 165, 233, 0.15); padding: 0.12rem 0.55rem; border-radius: 4px; border: 1px solid rgba(25, 211, 230, 0.25);" th:text="'Team: ' + ${r.teamName}">Team: Innovators</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="white-space: nowrap;">
+                            <strong style="color: #ffffff;" th:text="${r.dept}">CSE</strong>
+                            <span style="color: var(--muted);">&middot;</span>
+                            <span style="color: var(--foam);" th:text="${r.year}">3rd Year</span>
+                        </div>
+                        <div style="margin-top: 0.25rem;">
+                            <span class="track-tag" style="font-size: 0.7rem; padding: 0.12rem 0.5rem; background: rgba(25, 211, 230, 0.12); border-color: rgba(25, 211, 230, 0.3); color: var(--aqua);" th:text="'Sec ' + ${r.section}">Sec 6</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.85rem;" th:text="${r.leaderPhone}">+91 9876543210</div>
+                        <div style="font-size: 0.75rem; color: var(--muted);" th:text="${r.leaderEmail}">rahul@example.com</div>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <span th:text="${r.teamSize} + (${r.teamSize == 1} ? ' Person' : ' Persons')">1 Person</span>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <th:block th:if="${r.participantRole == null or r.participantRole == 'Leader' or r.participantRole == '' or !r.id.contains('-M')}">
+                            <strong style="color: #4ade80;" class="fee-amount-val"
+                                    th:attr="data-fee=${r.amountPaid > 0 ? r.amountPaid : (r.teamSize > 0 ? r.teamSize * 100 : 300)}"
+                                    th:text="'&#8377;' + ${r.amountPaid > 0 ? r.amountPaid : (r.teamSize > 0 ? r.teamSize * 100 : 300)}">&#8377;300</strong>
+                        </th:block>
+                        <th:block th:unless="${r.participantRole == null or r.participantRole == 'Leader' or r.participantRole == '' or !r.id.contains('-M')}">
+                            <span style="color: var(--muted); font-weight: 600; font-size: 1.1rem; display: inline-block; padding-left: 0.25rem;">&minus;</span>
+                        </th:block>
+                    </td>
+                    <td>
+                        <span style="font-family: monospace; font-size: 0.85rem; background: rgba(2, 17, 31, 0.6); padding: 0.2rem 0.4rem; border-radius: 4px;" th:text="${r.utr}">UTR123</span>
+                    </td>
+                    <td>
+                        <div th:if="${r.paymentImagePath != null and !r.paymentImagePath.isBlank()}">
+                            <a th:href="${r.paymentImagePath}" target="_blank" style="color: var(--foam); text-decoration: underline; font-size: 0.82rem;">
+                                &#128247; View Proof
+                            </a>
+                        </div>
+                        <div th:unless="${r.paymentImagePath != null and !r.paymentImagePath.isBlank()}" style="color: var(--muted); font-size: 0.78rem;">
+                            No image
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-cell-btns">
+                            <a th:href="@{'/register/pass/' + ${r.id}}" class="action-btn-view" title="View Boarding Pass Ticket">
+                                <span>&#127915; View</span>
+                            </a>
+                            <button type="button" class="action-btn-delete"
+                                    th:attr="data-id=${r.id}, data-name=${r.leaderName}, data-team=${r.teamName}, data-role=${r.participantRole}"
+                                    onclick="openDeleteModal(this)"
+                                    title="Delete this record permanently from the database">
+                                <span>&#128465; Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- PERMANENT RECORD DELETION CONFIRMATION MODAL -->
+<div id="deleteConfirmModal" class="delete-modal-overlay">
+    <div class="delete-modal-card">
+        <div class="delete-modal-icon">&#128465;</div>
+        <h3>Delete Registration Record?</h3>
+        <p>Are you sure you want to delete this record? It will be <strong>permanently removed</strong> from the PostgreSQL database (<code>public.registrations</code>).</p>
+        
+        <div class="delete-modal-preview-box">
+            <div><strong>Pass ID:</strong> <span id="modalDeleteIdText" style="color: var(--aqua); font-family: monospace;">ODY-0000</span></div>
+            <div><strong>Student:</strong> <span id="modalDeleteNameText" style="color: #ffffff; font-weight: 600;">Name</span></div>
+            <div><strong>Team:</strong> <span id="modalDeleteTeamText" style="color: var(--foam);">Team</span></div>
+            <div style="margin-top: 0.45rem; font-size: 0.78rem; color: #fca5a5; line-height: 1.4;">
+                &#9888; If this is a primary team registration, all associated group member records will also be deleted from the database.
+            </div>
+        </div>
+
+        <form id="deleteRecordForm" method="post" th:action="@{/admin/registrations/delete}">
+            <input type="hidden" name="id" id="modalDeleteIdInput" value="">
+            <div class="delete-modal-actions">
+                <button type="button" class="btn-modal-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button type="submit" class="btn-modal-confirm-delete" id="btnConfirmDeleteRecord">
+                    <span>&#128465; Delete Record</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer class="footer" style="margin-top: 4rem;">
+    <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+</footer>
+
+<!-- Inactivity Warning Modal -->
+<div id="inactivityWarningModal" class="inactivity-modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="inactivityModalTitle">
+    <div class="inactivity-modal-card">
+        <div class="inactivity-warning-icon">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        </div>
+        <h2 id="inactivityModalTitle" class="inactivity-modal-title">Session Inactivity Warning</h2>
+        <p class="inactivity-modal-desc">
+            No mouse or keyboard activity detected. For your security, you will be automatically logged out in:
+        </p>
+        <div class="inactivity-countdown-box">
+            <span id="inactivityCountdownSec">60</span>
+            <span class="sec-label">seconds</span>
+        </div>
+        <p class="inactivity-modal-subdesc">
+            Move your mouse, press any key, or click below to stay signed in.
+        </p>
+        <div class="inactivity-modal-actions">
+            <button type="button" class="btn-stay-active" onclick="keepSessionActive()">
+                <span>Stay Signed In</span>
+                <span>&rarr;</span>
+            </button>
+            <a th:href="@{/admin/logout}" class="btn-logout-now">
+                <span>&#128274; Logout Now</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
+<script th:src="@{/js/admin.js(v=1)}" src="/js/admin.js?v=1"></script>
+</body>
+</html>

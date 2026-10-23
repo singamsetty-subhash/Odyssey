@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Student Responses | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ' Admin'">
+        Student Responses | Odyssey Admin
+    </title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
+    <link rel="stylesheet" th:href="@{/css/admin-responses.css(v=2)}" href="/css/admin-responses.css?v=2">
+</head>
+<body class="admin-page">
+
+<nav class="nav">
+    <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
+        <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo" class="nav-logo-img">
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+    </button>
+    <ul id="navMenu">
+        <li><a th:href="@{/}" href="/">Home</a></li>
+        <li><a th:href="@{/admin/registrations}" href="/admin/registrations">Database Manifest</a></li>
+        <li><a th:href="@{/admin/responses}" href="/admin/responses" style="color: var(--aqua); font-weight: 600;">Student Responses</a></li>
+        <li><a th:href="@{/student-response}" href="/student-response" target="_blank" style="color: var(--muted); font-size: 0.85rem;">View Public Form &nearr;</a></li>
+        <li><a th:href="@{/admin/logout}" href="/admin/logout" style="color: #ff7675; font-weight: 600;">&#128274; Logout</a></li>
+    </ul>
+</nav>
+
+<div class="admin-wrap">
+    <div class="admin-top">
+        <div class="admin-title-box">
+            <h1>Odyssey Student &amp; Team Responses</h1>
+            <p>Live messages, expectations, and feedback submitted by participating teams for Odyssey 2026</p>
+        </div>
+        <div class="admin-actions">
+            <a th:href="@{/admin/responses/export/csv}" class="admin-btn" style="background: rgba(46, 204, 113, 0.2); border-color: rgba(46, 204, 113, 0.55); color: #4ade80;">
+                <span>&#128202; Export Responses (.csv)</span>
+            </a>
+            <button type="button" onclick="window.print()" class="admin-btn">
+                <span>&#128424; Print / PDF</span>
+            </button>
+            <a th:href="@{/admin/registrations}" class="admin-btn">
+                <span>&larr; Back to Manifest</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Search bar & Count badge -->
+    <div class="search-bar-wrap">
+        <input type="text" id="respFilterInput" class="search-input" placeholder="Search by Team Name, Leader, Roll No, or Department..." oninput="filterResponsesTable()">
+        <div style="font-size: 0.9rem; color: var(--muted);">
+            Total Responses Recorded: <strong style="color: var(--aqua);" th:text="${totalCount}">0</strong>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="manifest-table" id="responsesTable">
+            <thead>
+                <tr>
+                    <th># ID</th>
+                    <th>Team Name</th>
+                    <th>Lead Participant</th>
+                    <th>Roll Number</th>
+                    <th>Department</th>
+                    <th>Email Address</th>
+                    <th>Message About Event</th>
+                    <th>Submitted Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${responses}">
+                    <td>
+                        <span style="font-family: monospace; color: var(--muted);" th:text="'#' + ${r.id}">#1</span>
+                    </td>
+                    <td>
+                        <strong style="color: var(--aqua); font-size: 0.95rem;" th:text="${r.teamName}">Cyber Guardians</strong>
+                    </td>
+                    <td>
+                        <div style="color: #ffffff; font-weight: 600;" th:text="${r.leaderName}">Rahul Sharma</div>
+                    </td>
+                    <td>
+                        <strong style="color: var(--foam); font-family: monospace;" th:text="${r.rollNumber}">22JR1A0501</strong>
+                    </td>
+                    <td>
+                        <span style="background: rgba(25, 211, 230, 0.12); border: 1px solid rgba(25, 211, 230, 0.3); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.8rem; color: #ffffff;" th:text="${r.dept}">CSE</span>
+                    </td>
+                    <td>
+                        <a th:href="'mailto:' + ${r.email}" style="color: var(--foam); font-size: 0.84rem; text-decoration: underline;" th:text="${r.email}">email@example.com</a>
+                    </td>
+                    <td>
+                        <div class="msg-text-box" th:text="${r.message}">
+                            Excited to pitch our innovative venture!
+                        </div>
+                    </td>
+                    <td style="white-space: nowrap; font-size: 0.8rem; color: var(--muted);">
+                        <span th:text="${#temporals.format(r.submittedAt, 'yyyy-MM-dd HH:mm')}">2026-10-21 12:30</span>
+                    </td>
+                </tr>
+                <tr th:if="${responses == null or responses.isEmpty()}">
+                    <td colspan="8" style="text-align: center; padding: 4rem 2rem; color: var(--muted);">
+                        <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">&#128172;</div>
+                        <p style="margin: 0; font-size: 1rem;">No student responses recorded yet. They will appear here live when teams submit via the Student Response portal.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+</footer>
+
+<script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
+<script th:src="@{/js/admin-responses.js(v=1)}" src="/js/admin-responses.js?v=1"></script>
+
+</body>
+</html>

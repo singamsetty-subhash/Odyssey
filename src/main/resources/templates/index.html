@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${eventName} + ': ' + ${tagline}">Odyssey: Beyond the Horizon</title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
+    <link rel="stylesheet" th:href="@{/css/index.css(v=4)}" href="/css/index.css?v=4">
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a href="#home" class="logo" aria-label="Odyssey">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo"
+                class="nav-logo-img">
+        </a>
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+        <ul id="navMenu">
+            <li><a href="#about">About</a></li>
+            <li><a href="#stages">Stages</a></li>
+            <li><a href="#schedule">Schedule</a></li>
+            <li><a th:href="@{/calendar}" href="/calendar">Calendar</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find Ticket</a></li>
+            <li><a th:href="@{/faq}" href="/faq">FAQ</a></li>
+            <li><a th:href="@{/student-response}" href="/student-response">Student Response</a></li>
+            <li><a href="#community">Community</a></li>
+            <li><a th:href="@{/register}" href="/register" class="nav-reg-btn">Register</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="hero">
+        <div class="hero-content">
+            <a th:href="@{/admin}" href="/admin/registrations" class="eyebrow">KITS E-Cell Presents</a>
+            <div class="hero-logo-wrap">
+                <h1 class="hero-title-wrap">
+                    <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="Odyssey"
+                        class="hero-logo-img">
+                    <span class="visually-hidden" th:text="${eventName}">Odyssey</span>
+                </h1>
+            </div>
+            <h2 th:text="${tagline}">Beyond the Horizon</h2>
+
+            <p class="hero-sub">Every startup begins with an idea, ventures into the unknown, and builds something
+                extraordinary.</p>
+            <a th:href="@{/register}" href="/register" class="btn">Begin Your Journey</a>
+            <div class="hero-organizer">
+                <span class="hero-org-label">Organised by</span>
+                <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer" class="hero-org-link">Team E-cell</a>
+            </div>
+        </div>
+
+        <svg class="waves" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+            <path class="wave w1" d="M0,120 C240,200 480,40 720,110 C960,180 1200,60 1440,120 L1440,220 L0,220 Z" />
+            <path class="wave w2" d="M0,150 C240,80 480,190 720,140 C960,90 1200,200 1440,150 L1440,220 L0,220 Z" />
+            <path class="wave w3" d="M0,180 C300,140 600,220 900,180 C1100,150 1300,200 1440,180 L1440,220 L0,220 Z" />
+        </svg>
+    </header>
+
+    <section id="about" class="section">
+        <h3 class="section-title">The Core Concept</h3>
+        <p class="lead">
+            An <strong>odyssey</strong> is a long, adventurous journey filled with challenges and discoveries.
+            Just like every startup founder's path: from a spark of an idea, across uncertain waters,
+            to a destination no one has charted yet.
+        </p>
+    </section>
+
+    <section id="stages" class="section alt">
+        <h3 class="section-title">Four Stages. One Odyssey.</h3>
+        <div class="stages">
+            <article class="card" th:each="s : ${stages}">
+                <span class="stage-no" th:text="'Stage ' + ${s.number}">Stage 1</span>
+                <h4 th:text="${s.title}">The Departure</h4>
+                <p class="tag" th:text="${s.tagline}">Every journey starts somewhere.</p>
+                <p th:text="${s.description}">Description</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="schedule" class="section schedule-section">
+        <p class="eyebrow">Two Days of High-Stakes Entrepreneurship</p>
+        <h3 class="section-title">Event Schedule &amp; Rounds</h3>
+        <p class="lead">Navigate through the 2-day entrepreneurial odyssey, from initial problem discovery to the
+            investor grand finale.</p>
+
+        <!-- Day 1 & Day 2 Switcher Buttons -->
+        <div class="day-switcher-wrap">
+            <button type="button" class="day-btn active" id="btnDay1" onclick="switchScheduleDay('day1')">
+                <span class="day-pill">Day 1 &middot; Oct 29</span>
+            </button>
+            <button type="button" class="day-btn" id="btnDay2" onclick="switchScheduleDay('day2')">
+                <span class="day-pill">Day 2 &middot; Oct 30</span>
+            </button>
+        </div>
+
+        <!-- Day 1 Schedule Panel -->
+        <div id="scheduleDay1" class="day-panel active" style="display: block;">
+            <div class="day-hero-banner">
+                <span class="day-banner-title">&#128197; Day 1 (Oct 29) — Startup Formation &amp; Strategic
+                    Challenge</span>
+                <span class="day-banner-time">&#9201; 10:00 AM – 5:00 PM IST (AP Time)</span>
+                <span class="day-banner-venue">&#128205; CV Raman Hall, KITS</span>
+            </div>
+
+            <div class="timeline-grid">
+                <!-- Round 1 -->
+                <article class="round-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 10:00 – 10:15 AM</span>
+                        <span class="round-tag">Round 1</span>
+                    </div>
+                    <h4>Round 1: Launch</h4>
+                    <p>Welcome, event rules briefing, and team check-in.</p>
+                </article>
+
+                <!-- Round 2 -->
+                <article class="round-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 10:15 – 10:35 AM</span>
+                        <span class="round-tag">Round 2</span>
+                    </div>
+                    <h4>Round 2: Problem Drop</h4>
+                    <p>Receive assigned problem statement and form initial hypothesis.</p>
+                </article>
+
+                <!-- Round 3 -->
+                <article class="round-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 10:35 – 11:35 AM</span>
+                        <span class="round-tag">Round 3</span>
+                    </div>
+                    <h4>Round 3: Customer Hunt</h4>
+                    <p>Collect coordinator customer-review slips to gather real user insights.</p>
+                </article>
+
+                <!-- Round 4 -->
+                <article class="round-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 11:35 AM – 1:00 PM</span>
+                        <span class="round-tag">Round 4</span>
+                    </div>
+                    <h4>Round 4: Solution Lab</h4>
+                    <p>Define target customer, value proposition, and initial MVP concept.</p>
+                </article>
+
+                <!-- Lunch Break -->
+                <article class="round-card break-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#127857; 1:00 – 2:00 PM</span>
+                        <span class="round-tag">Break</span>
+                    </div>
+                    <h4>&#127857; Lunch Break</h4>
+                    <p>Refuel, network, and discuss team strategy.</p>
+                </article>
+
+                <!-- Round 5 -->
+                <article class="round-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 2:00 – 3:00 PM</span>
+                        <span class="round-tag">Round 5</span>
+                    </div>
+                    <h4>Round 5: Strategic Condition Challenge</h4>
+                    <p>Receive a private surprise business condition and adapt strategy.</p>
+                </article>
+
+                <!-- Round 6 -->
+                <article class="round-card highlight-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 3:00 – 5:00 PM</span>
+                        <span class="round-tag">Round 6</span>
+                    </div>
+                    <h4>Round 6: Startup Development &amp; Pitch Prep</h4>
+                    <p>Build prototype and prepare for presentation.</p>
+                </article>
+            </div>
+        </div>
+
+        <!-- Day 2 Schedule Panel -->
+        <div id="scheduleDay2" class="day-panel" style="display: none;">
+            <div class="day-hero-banner">
+                <span class="day-banner-title">&#128197; Day 2 (Oct 30) — Crisis Response, Presentations &amp;
+                    Investment</span>
+                <span class="day-banner-time">&#9201; 10:00 AM – 5:00 PM IST (AP Time)</span>
+                <span class="day-banner-venue">&#128205; CV Raman Hall, KITS</span>
+            </div>
+
+            <div class="timeline-grid">
+                <!-- Round 7 -->
+                <article class="round-card highlight-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 10:00 – 11:30 AM</span>
+                        <span class="round-tag">Round 7</span>
+                    </div>
+                    <h4>Round 7: Crisis Envelope / Market Shock</h4>
+                    <p>Handle a sudden market shock under tight time constraints.</p>
+                </article>
+
+                <!-- Prep -->
+                <article class="round-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 11:30 AM – 1:00 PM</span>
+                        <span class="round-tag">Preparation</span>
+                    </div>
+                    <h4>Team Prep &amp; Submission Verification</h4>
+                    <p>Finalize presentation slides and verify submission files.</p>
+                </article>
+
+                <!-- Lunch Break -->
+                <article class="round-card break-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#127857; 1:00 – 2:00 PM</span>
+                        <span class="round-tag">Break</span>
+                    </div>
+                    <h4>&#127857; Lunch Break</h4>
+                    <p>Recharge before entering the pitching arena.</p>
+                </article>
+
+                <!-- Round 8 -->
+                <article class="round-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 2:00 – 3:30 PM</span>
+                        <span class="round-tag">Round 8</span>
+                    </div>
+                    <h4>Round 8: Team Presentations</h4>
+                    <p>Present problem, solution, and journey to all participating teams.</p>
+                </article>
+
+                <!-- Round 9 -->
+                <article class="round-card highlight-card">
+                    <div class="round-top">
+                        <span class="time-badge">&#9200; 3:30 – 4:30 PM</span>
+                        <span class="round-tag">Round 9</span>
+                    </div>
+                    <h4>Round 9: Investor Pitch</h4>
+                    <p>Pitch finalized venture and MVP directly to the investor panel.</p>
+                </article>
+
+                <!-- Finale -->
+                <article class="round-card highlight-card" style="border-color: #facc15;">
+                    <div class="round-top">
+                        <span class="time-badge" style="color: #facc15; border-color: rgba(234, 179, 8, 0.4);">&#127942;
+                            4:30 – 5:00 PM</span>
+                        <span class="round-tag" style="background: rgba(234, 179, 8, 0.2); color: #fef08a;">Grand
+                            Finale</span>
+                    </div>
+                    <h4>Awards &amp; Closing Ceremony</h4>
+                    <p>Score consolidation, winner announcements, and closing remarks.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CINEMATIC TEASER VIDEO SECTION -->
+    <section class="section odyssey-video-section" id="teaser-video">
+        <div class="container" style="max-width: 1060px; margin: 0 auto; text-align: center;">
+            <div class="cta-badge-wrap" style="margin-bottom: 1.2rem;">
+                <span class="cta-badge">
+                    <span class="pulse-dot"></span>
+                    <span>Experience Odyssey 2026 &middot; Official Teaser Video</span>
+                </span>
+            </div>
+
+            <h3 class="section-title">Glimpse Into The Horizon</h3>
+            <p class="lead" style="max-width: 680px; margin: 0 auto 2.2rem auto;">
+                Watch the official teaser for <strong>Odyssey: Beyond the Horizon</strong>. Feel the energy, dynamic
+                challenges, and entrepreneurial voyage ahead.
+            </p>
+
+            <div class="cinematic-video-card">
+                <div class="video-wrapper">
+                    <video id="odysseyTeaserVideo" class="cinematic-video-player" controls preload="metadata"
+                        playsinline>
+                        <source th:src="@{/images/1016.mp4}" src="/images/1016.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="register" class="section cta">
+        <div class="cta-badge-wrap">
+            <span class="cta-badge">
+                <span class="pulse-dot"></span>
+                <span>Flagship 2-Day Venture Conclave &middot; Oct 29 &amp; 30</span>
+            </span>
+        </div>
+
+        <h3 class="section-title">Ready to Set Sail?</h3>
+        <p class="lead">Gather your crew, bring your idea, and chart a course beyond the horizon.</p>
+
+        <!-- Official Venue & Date Showcase -->
+        <div class="cta-venue-card">
+            <!-- Venue Column -->
+            <div class="cta-venue-col">
+                <div class="cta-venue-icon-circle" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </div>
+                <div class="cta-venue-content">
+                    <span class="cta-venue-tag">&#128205; Official Venue</span>
+                    <h4 class="cta-venue-title">CV Raman Hall</h4>
+                    <p class="cta-venue-college">KKR &amp; KSR Institute of Technology and Sciences (KITS)</p>
+                    <span class="cta-venue-sub">Vinjanampadu, Vatticherukuru Mandal, Guntur, AP</span>
+                </div>
+            </div>
+
+            <!-- Divider Line -->
+            <div class="cta-venue-separator" aria-hidden="true"></div>
+
+            <!-- Schedule & Date Column -->
+            <div class="cta-venue-col">
+                <div class="cta-venue-icon-circle cta-date-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <div class="cta-venue-content">
+                    <span class="cta-venue-tag">&#128197; Event Dates</span>
+                    <h4 class="cta-venue-title">October 29 &amp; 30</h4>
+                    <p class="cta-venue-college">29th &amp; 30th of this month &middot; 2 Days of Action</p>
+                    <span class="cta-venue-sub">&#9201; 10:00 AM – 5:00 PM IST (Both Days)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-btn-group">
+            <a th:href="@{/register}" href="/register" class="btn cta-primary-btn">
+                <span>Register Now</span>
+                <span class="btn-arrow">&rarr;</span>
+            </a>
+            <a href="https://maps.google.com/?q=KKR+%26+KSR+Institute+of+Technology+and+Sciences+Vinjanampadu+Guntur"
+                target="_blank" rel="noopener noreferrer" class="cta-map-btn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                <span>Locate on Google Maps</span>
+            </a>
+            <a th:href="@{/calendar}" href="/calendar" class="cta-cal-link">
+                <span>&#128197; View Full Schedule &rarr;</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer containing WhatsApp Community Segment -->
+    <footer id="community" class="footer">
+        <div class="footer-community-wrap">
+            <div class="whatsapp-card">
+                <div class="whatsapp-badge-row">
+                    <span class="whatsapp-badge">
+                        <span class="pulse-dot"></span> Official Participant Community
+                    </span>
+                </div>
+                <div class="whatsapp-body">
+                    <div class="whatsapp-icon-wrap" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
+                            <path
+                                d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.079-2.128-.517-1.706-.709-2.807-2.455-2.892-2.569-.085-.114-.693-.923-.693-1.761 0-.838.44-1.25.597-1.423.157-.173.342-.216.456-.216.114 0 .228.002.328.007.106.006.248-.04.388.297.144.347.491 1.2.534 1.288.043.088.072.19.014.305-.058.115-.087.187-.173.289l-.26.309c-.087.098-.178.204-.076.38.102.176.454.75 1.02 1.253.729.648 1.344.848 1.534.943.19.095.301.079.412-.048.111-.127.476-.554.603-.744.127-.19.254-.159.423-.095.17.064 1.075.507 1.26.599.185.092.308.138.353.216.045.078.045.452-.099.857zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.434 5.176L2 22l4.957-1.399C8.38 21.464 10.129 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.637 0-3.175-.487-4.469-1.326l-.32-.208-2.946.832.846-2.871-.228-.337A8.163 8.163 0 013.8 12c0-4.521 3.679-8.2 8.2-8.2 4.522 0 8.2 3.679 8.2 8.2 0 4.522-3.678 8.2-8.2 8.2z" />
+                        </svg>
+                    </div>
+                    <div class="whatsapp-text">
+                        <h3 class="whatsapp-title">Join Us on WhatsApp</h3>
+                        <p class="whatsapp-desc">Connect with fellow participants, receive real-time announcements,
+                            round guidelines, and direct coordinator assistance throughout Odyssey.</p>
+                    </div>
+                    <div class="whatsapp-cta-wrap">
+                        <a href="https://chat.whatsapp.com/LTBBY7HvMAJF1hROCei2J0?s=sw&p=a&mlu=4&ilr=4" target="_blank"
+                            rel="noopener noreferrer" class="whatsapp-btn">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path
+                                    d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.079-2.128-.517-1.706-.709-2.807-2.455-2.892-2.569-.085-.114-.693-.923-.693-1.761 0-.838.44-1.25.597-1.423.157-.173.342-.216.456-.216.114 0 .228.002.328.007.106.006.248-.04.388.297.144.347.491 1.2.534 1.288.043.088.072.19.014.305-.058.115-.087.187-.173.289l-.26.309c-.087.098-.178.204-.076.38.102.176.454.75 1.02 1.253.729.648 1.344.848 1.534.943.19.095.301.079.412-.048.111-.127.476-.554.603-.744.127-.19.254-.159.423-.095.17.064 1.075.507 1.26.599.185.092.308.138.353.216.045.078.045.452-.099.857zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.434 5.176L2 22l4.957-1.399C8.38 21.464 10.129 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.637 0-3.175-.487-4.469-1.326l-.32-.208-2.946.832.846-2.871-.228-.337A8.163 8.163 0 013.8 12c0-4.521 3.679-8.2 8.2-8.2 4.522 0 8.2 3.679 8.2 8.2 0 4.522-3.678 8.2-8.2 8.2z" />
+                            </svg>
+                            <span>Join WhatsApp Group</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a
+                    href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship
+                    Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank"
+                    rel="noopener noreferrer">kitsecellgnt.com</a></p>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
+    <script th:src="@{/js/main.js(v=5)}" src="/js/main.js?v=5"></script>
+</body>
+
+</html>

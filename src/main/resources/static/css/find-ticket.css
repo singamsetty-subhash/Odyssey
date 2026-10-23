@@ -1,0 +1,271 @@
+        :root {
+            --deep: #01111f;
+            --navy: #021a30;
+            --aqua: #19d3e6;
+            --foam: #a8f3ff;
+            --text: #e2f1f8;
+            --muted: #8aa8be;
+            --card-bg: rgba(6, 38, 64, 0.78);
+        }
+
+        body.find-page {
+            margin: 0;
+            padding-top: 5.5rem;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse at 50% 12%, rgba(25, 211, 230, 0.18), transparent 60%),
+                radial-gradient(ellipse at 85% 85%, rgba(14, 165, 233, 0.12), transparent 50%),
+                linear-gradient(180deg, #010a14 0%, #031d33 50%, #01111f 100%);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .find-container {
+            max-width: 960px;
+            margin: 2rem auto 4rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .find-hero {
+            text-align: center;
+            margin-bottom: 2.2rem;
+        }
+
+        .find-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1.1rem;
+            border-radius: 50px;
+            background: rgba(25, 211, 230, 0.12);
+            border: 1px solid rgba(25, 211, 230, 0.35);
+            color: var(--aqua);
+            font-size: 0.84rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 15px rgba(25, 211, 230, 0.2);
+        }
+
+        .find-title {
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--foam) 50%, var(--aqua) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 0.8rem 0;
+        }
+
+        .find-sub {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 660px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .find-card {
+            background: var(--card-bg);
+            border: 1.5px solid rgba(25, 211, 230, 0.32);
+            border-radius: 24px;
+            padding: 2.4rem;
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.6),
+                0 0 35px rgba(25, 211, 230, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .find-card-head {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(25, 211, 230, 0.18);
+        }
+
+        .find-icon-wrap {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: rgba(25, 211, 230, 0.15);
+            border: 1px solid var(--aqua);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--aqua);
+            flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(25, 211, 230, 0.25);
+        }
+
+        .find-card-head h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .find-card-head p {
+            margin: 0.25rem 0 0;
+            font-size: 0.86rem;
+            color: var(--muted);
+        }
+
+        .find-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4rem;
+        }
+
+        @media (max-width: 650px) {
+            .find-grid {
+                grid-template-columns: 1fr;
+            }
+            .find-card {
+                padding: 1.8rem 1.4rem;
+            }
+        }
+
+        .full-width-col {
+            grid-column: 1 / -1;
+        }
+
+        .find-label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--foam);
+            margin-bottom: 0.5rem;
+        }
+
+        .find-input-wrap {
+            position: relative;
+        }
+
+        .find-input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--aqua);
+            font-size: 1.1rem;
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .find-input {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(2, 17, 31, 0.78);
+            border: 1.5px solid rgba(25, 211, 230, 0.3);
+            border-radius: 12px;
+            padding: 0.88rem 1rem 0.88rem 2.8rem;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.94rem;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .find-input:focus {
+            border-color: var(--aqua);
+            box-shadow: 0 0 18px rgba(25, 211, 230, 0.4);
+            background: rgba(2, 22, 40, 0.92);
+        }
+
+        .find-hint {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 0.35rem;
+            line-height: 1.4;
+        }
+
+        .btn-verify-ticket {
+            width: 100%;
+            padding: 1.05rem 1.8rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #19d3e6 0%, #0ea5e9 100%);
+            border: none;
+            color: #01111f;
+            font-weight: 700;
+            font-size: 1.02rem;
+            font-family: inherit;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            box-shadow: 0 6px 25px rgba(25, 211, 230, 0.45);
+            transition: all 0.25s ease;
+            margin-top: 1.6rem;
+        }
+
+        .btn-verify-ticket:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(25, 211, 230, 0.75);
+            filter: brightness(1.1);
+        }
+
+        .find-alert-error {
+            background: rgba(239, 68, 68, 0.16);
+            border: 1.5px solid rgba(239, 68, 68, 0.55);
+            color: #fca5a5;
+            padding: 1.1rem 1.4rem;
+            border-radius: 14px;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.9rem;
+            line-height: 1.5;
+            font-size: 0.92rem;
+        }
+
+        /* Assistance Grid */
+        .help-grid {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4rem;
+        }
+
+        @media (max-width: 650px) {
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .help-box {
+            background: rgba(4, 28, 48, 0.55);
+            border: 1px solid rgba(25, 211, 230, 0.2);
+            border-radius: 16px;
+            padding: 1.3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .help-box h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.95rem;
+            color: var(--foam);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-box p {
+            margin: 0;
+            font-size: 0.84rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }

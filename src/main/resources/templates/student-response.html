@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Student & Team Response | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
+        Student &amp; Team Response | Odyssey: Beyond the Horizon
+    </title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
+    <link rel="stylesheet" th:href="@{/css/student-response.css(v=1)}" href="/css/student-response.css?v=1">
+</head>
+
+<body class="response-page">
+
+    <!-- Top Navigation Header -->
+    <nav class="nav">
+        <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo" class="nav-logo-img">
+        </a>
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+        <ul id="navMenu">
+            <li><a th:href="@{/}" href="/">Home</a></li>
+            <li><a th:href="@{/register}" href="/register">Register Team</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find My Ticket</a></li>
+            <li><a th:href="@{/faq}" href="/faq">FAQ</a></li>
+            <li><a th:href="@{/student-response}" href="/student-response" style="color: var(--aqua); font-weight: 600;">Student Response</a></li>
+            <li><a th:href="@{/calendar}" href="/calendar">Calendar</a></li>
+        </ul>
+    </nav>
+
+    <main class="response-container">
+        <!-- Hero Section -->
+        <header class="response-hero">
+            <div class="response-badge">
+                <span>💬</span>
+                <span>Official Odyssey Student &amp; Team Voice Portal</span>
+            </div>
+            <h1 class="response-title">Student &amp; Team Event Response</h1>
+            <p class="response-sub">
+                Share your team's thoughts, venture ideas, summit expectations, and messages for <strong>Odyssey 2026</strong>.
+                Every response shapes the future of student entrepreneurship at KITS E-Cell.
+            </p>
+        </header>
+
+        <!-- Feedback Messages -->
+        <div th:if="${successMessage}" class="resp-alert-success" role="status">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span th:text="${successMessage}">Thank you! Your team response has been recorded.</span>
+        </div>
+
+        <div th:if="${errorMessage}" class="resp-alert-error" role="alert">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span th:text="${errorMessage}">Please fill in all required fields.</span>
+        </div>
+
+        <!-- 2-Column Layout: Response Form & Live Team Voices Wall -->
+        <div class="response-layout-grid">
+            <!-- Left Form Card -->
+            <section class="response-card">
+                <div class="response-card-head">
+                    <div class="response-icon-wrap">&#9997;</div>
+                    <div>
+                        <h2>Submit Team Message</h2>
+                        <p>Fill in your credentials &amp; team's perspective about the event.</p>
+                    </div>
+                </div>
+
+                <form th:action="@{/student-response}" method="post" autocomplete="off">
+                    <div class="form-grid-resp">
+                        <!-- Team Name -->
+                        <div class="full-col">
+                            <label class="resp-label" for="respTeamName">Team Name <span style="color: #ff6b6b;">*</span></label>
+                            <input type="text" id="respTeamName" name="teamName" class="resp-input"
+                                placeholder="e.g. Cyber Guardians, Alpha Titans, Innovators..."
+                                th:value="${prevTeamName}" required>
+                        </div>
+
+                        <!-- Leader Name -->
+                        <div>
+                            <label class="resp-label" for="respLeaderName">Leader Name <span style="color: #ff6b6b;">*</span></label>
+                            <input type="text" id="respLeaderName" name="leaderName" class="resp-input"
+                                placeholder="e.g. Rahul Sharma"
+                                th:value="${prevLeaderName}" required>
+                        </div>
+
+                        <!-- Roll Number -->
+                        <div>
+                            <label class="resp-label" for="respRollNumber">Roll Number <span style="color: #ff6b6b;">*</span></label>
+                            <input type="text" id="respRollNumber" name="rollNumber" class="resp-input"
+                                placeholder="e.g. 22JR1A0501"
+                                th:value="${prevRollNumber}" required>
+                        </div>
+
+                        <!-- Department Dropdown -->
+                        <div>
+                            <label class="resp-label" for="respDept">Department <span style="color: #ff6b6b;">*</span></label>
+                            <select id="respDept" name="dept" class="resp-select" onchange="toggleRespOtherDept()" required>
+                                <option value="">-- Select Department --</option>
+                                <option value="CSE" th:selected="${prevDept == 'CSE'}">Computer Science &amp; Engineering (CSE)</option>
+                                <option value="CSD" th:selected="${prevDept == 'CSD'}">CSE - Data Science (CSD)</option>
+                                <option value="CSM" th:selected="${prevDept == 'CSM'}">CSE - Machine Learning (CSM)</option>
+                                <option value="CAI" th:selected="${prevDept == 'CAI'}">CSE - Artificial Intelligence (CAI)</option>
+                                <option value="ECE" th:selected="${prevDept == 'ECE'}">Electronics &amp; Communication (ECE)</option>
+                                <option value="EEE" th:selected="${prevDept == 'EEE'}">Electrical &amp; Electronics (EEE)</option>
+                                <option value="IT" th:selected="${prevDept == 'IT'}">Information Technology (IT)</option>
+                                <option value="Other" th:selected="${prevDept == 'Other' or (prevOtherDept != null and !prevOtherDept.isBlank())}">Other Department</option>
+                            </select>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="resp-label" for="respEmail">Email Address <span style="color: #ff6b6b;">*</span></label>
+                            <input type="email" id="respEmail" name="email" class="resp-input"
+                                placeholder="name@kits.ac.in"
+                                th:value="${prevEmail}" required>
+                        </div>
+
+                        <!-- Dynamic Manual Department Input (shown when 'Other' selected) -->
+                        <div class="full-col" id="respOtherDeptWrap" style="display: none; background: rgba(25, 211, 230, 0.06); border: 1.5px dashed rgba(25, 211, 230, 0.4); border-radius: 12px; padding: 0.9rem 1.1rem;">
+                            <label class="resp-label" for="respOtherDept">Specify Department Name <span style="color: #ff6b6b;">*</span></label>
+                            <input type="text" id="respOtherDept" name="otherDept" class="resp-input"
+                                placeholder="e.g. Mechanical, Civil, Chemical, Biotechnology, MBA, MCA..."
+                                th:value="${prevOtherDept}">
+                        </div>
+
+                        <!-- Message that team should give about the event -->
+                        <div class="full-col">
+                            <label class="resp-label" for="respMessage">
+                                <span>Message About The Event <span style="color: #ff6b6b;">*</span></span>
+                                <span style="font-size: 0.76rem; color: var(--muted); font-weight: normal; margin-left: 0.4rem;">
+                                    (Your team's vision, motivation, expectations, or feedback for Odyssey 2026)
+                                </span>
+                            </label>
+                            <textarea id="respMessage" name="message" class="resp-textarea"
+                                placeholder="Tell us what your team is building, your expectations from Odyssey 2026, or your message to the organizers &amp; mentors..."
+                                required th:text="${prevMessage}"></textarea>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem;">
+                                <span>Minimum 10 characters</span>
+                                <span id="charCount">0 / 3000 chars</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit-resp" id="btnTransmit">
+                        <span>&#128640; Transmit Team Response</span>
+                        <span>&rarr;</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Right Feed: Voices of Odyssey / What Teams Are Saying -->
+            <aside class="feed-card">
+                <h3 class="feed-title">
+                    <span>&#128227;</span>
+                    <span>Voices of Odyssey (<span th:text="${totalCount}">0</span>)</span>
+                </h3>
+                <p style="font-size: 0.82rem; color: var(--muted); margin: 0 0 1.2rem 0; line-height: 1.4;">
+                    Live messages submitted by registered student groups and innovators.
+                </p>
+
+                <div class="feed-list" th:if="${recentResponses != null and !recentResponses.isEmpty()}">
+                    <article th:each="r : ${recentResponses}" class="message-bubble">
+                        <div class="bubble-header">
+                            <span class="bubble-team" th:text="${r.teamName}">Cyber Guardians</span>
+                            <span class="bubble-dept" th:text="${r.dept}">CSE</span>
+                        </div>
+                        <p class="bubble-text" th:text="'&ldquo;' + ${r.message} + '&rdquo;'">
+                            "Excited to pitch our startup model and collaborate with visionary leaders at KITS E-Cell!"
+                        </p>
+                        <div class="bubble-author">
+                            <span th:text="'Lead: ' + ${r.leaderName} + ' (' + ${r.rollNumber} + ')'">Lead: Rahul</span>
+                            <span th:text="${#temporals.format(r.submittedAt, 'MMM dd, yyyy')}">Oct 21, 2026</span>
+                        </div>
+                    </article>
+                </div>
+
+                <div th:if="${recentResponses == null or recentResponses.isEmpty()}" style="text-align: center; padding: 3rem 1rem; color: var(--muted);">
+                    <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">&#128172;</div>
+                    <p style="margin: 0; font-size: 0.88rem;">Be the first team to transmit your message for Odyssey 2026!</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+    </footer>
+
+    <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
+    <script th:src="@{/js/student-response.js(v=1)}" src="/js/student-response.js?v=1"></script>
+</body>
+</html>
