@@ -208,10 +208,98 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Form submission feedback
+    // 4. Input Restrictions & Form submission feedback
+    // (A) Name Restriction: Only letters, spaces, and dots (.)
+    const nameInputs = document.querySelectorAll('.name-field, input[name="leaderName"], input[name$="Name"]:not([name="teamName"])');
+    nameInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            const original = e.target.value;
+            // Remove anything that is not a letter, space, or period (.)
+            const cleaned = original.replace(/[^a-zA-Z\s.]/g, '');
+            if (original !== cleaned) {
+                e.target.value = cleaned;
+            }
+            if (cleaned === '' || /^[a-zA-Z\s.]+$/.test(cleaned)) {
+                e.target.setCustomValidity('');
+            } else {
+                e.target.setCustomValidity('Name can only contain letters, spaces, and periods (.)');
+            }
+        });
+    });
+
+    // (B) Phone Restriction: Digits only, strictly 10 digits
+    const phoneInputs = document.querySelectorAll('.phone-field, input[type="tel"]');
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            let digits = e.target.value.replace(/\D/g, '');
+            // Strip leading +91 or 91 if full 12-digit number is pasted
+            if (digits.length === 12 && digits.startsWith('91')) {
+                digits = digits.slice(2);
+            } else if (digits.length === 11 && digits.startsWith('0')) {
+                digits = digits.slice(1);
+            }
+            // Restrict strictly to 10 digits
+            digits = digits.slice(0, 10);
+            e.target.value = digits;
+
+            if (digits.length === 10 || digits === '') {
+                e.target.setCustomValidity('');
+            } else {
+                e.target.setCustomValidity('Phone number must be exactly 10 digits');
+            }
+        });
+
+        input.addEventListener('blur', (e) => {
+            const val = e.target.value.trim();
+            if (val.length > 0 && val.length !== 10) {
+                e.target.setCustomValidity('Phone number must be exactly 10 digits');
+                e.target.reportValidity();
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    });
+
     const form = document.getElementById('odysseyRegistrationForm');
     if (form) {
-        form.addEventListener('submit', () => {
+        form.addEventListener('submit', (e) => {
+            // Check visible names
+            for (const input of nameInputs) {
+                if (input.offsetParent !== null) {
+                    const val = input.value.trim();
+                    if (input.required || val.length > 0) {
+                        if (!/^[a-zA-Z\s.]+$/.test(val)) {
+                            e.preventDefault();
+                            input.focus();
+                            input.setCustomValidity('Name can only contain letters, spaces, and periods (.)');
+                            input.reportValidity();
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // Check visible phones
+            for (const input of phoneInputs) {
+                if (input.offsetParent !== null) {
+                    const val = input.value.trim();
+                    if (input.required || val.length > 0) {
+                        if (val.length !== 10 || !/^\d{10}$/.test(val)) {
+                            e.preventDefault();
+                            input.focus();
+                            input.setCustomValidity('Phone number must be exactly 10 digits');
+                            input.reportValidity();
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                return;
+            }
+
             const submitBtn = document.getElementById('submitBtn');
             if (submitBtn) {
                 submitBtn.disabled = true;

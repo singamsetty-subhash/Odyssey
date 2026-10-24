@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +21,11 @@ import jakarta.servlet.http.HttpSession;
 public class StudentResponseController {
 
     private final StudentResponseRepository responseRepository;
+    private final RegistrationService registrationService;
 
-    public StudentResponseController(StudentResponseRepository responseRepository) {
+    public StudentResponseController(StudentResponseRepository responseRepository, RegistrationService registrationService) {
         this.responseRepository = responseRepository;
+        this.registrationService = registrationService;
     }
 
     @GetMapping({ "/student-response", "/response" })
@@ -56,6 +59,7 @@ public class StudentResponseController {
             finalDept = otherDept.trim();
         }
 
+        // 1. Validate mandatory fields
         boolean isValid = !teamName.isBlank() && !leaderName.isBlank() && !rollNumber.isBlank()
                 && !finalDept.isBlank() && !email.isBlank() && !message.isBlank();
 
@@ -63,22 +67,53 @@ public class StudentResponseController {
             model.addAttribute("eventName", "Odyssey");
             model.addAttribute("tagline", "Beyond the Horizon");
             model.addAttribute("errorMessage", "Please provide all required fields including Team Name, Leader Name, Roll Number, Department, Email, and your Event Message.");
-            model.addAttribute("prevTeamName", teamName);
-            model.addAttribute("prevLeaderName", leaderName);
-            model.addAttribute("prevRollNumber", rollNumber);
-            model.addAttribute("prevDept", dept);
-            model.addAttribute("prevOtherDept", otherDept);
-            model.addAttribute("prevEmail", email);
-            model.addAttribute("prevMessage", message);
-
-            List<StudentResponse> allResponses = responseRepository.findAllByOrderBySubmittedAtDesc();
-            model.addAttribute("totalCount", allResponses.size());
-            model.addAttribute("recentResponses", allResponses.stream().limit(12).toList());
+            populateFormModel(model, teamName, leaderName, rollNumber, dept, otherDept, email, message);
             return "student-response";
         }
 
+        // 2. Validate Leader Name format (letters, spaces, dots only)
+        if (!leaderName.trim().matches("^[a-zA-Z\\s.]+$")) {
+            model.addAttribute("eventName", "Odyssey");
+            model.addAttribute("tagline", "Beyond the Horizon");
+            model.addAttribute("errorMessage", "Leader Name can only contain letters, spaces, and dots (.) — no numbers or special characters are permitted.");
+            populateFormModel(model, teamName, leaderName, rollNumber, dept, otherDept, email, message);
+            return "student-response";
+        }
+
+        // 3. Database Match Verification: Ensure details match an existing registration in the database
+        String cleanTeam = teamName.trim();
+        boolean teamExists = registrationService.isTeamNameTaken(cleanTeam);
+        if (!teamExists) {
+            teamExists = registrationService.getAll().stream()
+                    .anyMatch(r -> r.getTeamName() != null && r.getTeamName().trim().equalsIgnoreCase(cleanTeam));
+        }
+
+        if (!teamExists) {
+            model.addAttribute("eventName", "Odyssey");
+            model.addAttribute("tagline", "Beyond the Horizon");
+            model.addAttribute("errorMessage",
+                    "Verification Failed: No registration found for Team Name '" + cleanTeam + "'. Please enter your exact registered Team Name.");
+            populateFormModel(model, teamName, leaderName, rollNumber, dept, otherDept, email, message);
+            return "student-response";
+        }
+
+        Optional<Registration> matchedReg = registrationService.verifyTeamCredentials(
+                cleanTeam, leaderName.trim(), rollNumber.trim(), finalDept, email.trim());
+
+        if (matchedReg.isEmpty()) {
+            model.addAttribute("eventName", "Odyssey");
+            model.addAttribute("tagline", "Beyond the Horizon");
+            model.addAttribute("errorMessage",
+                    "Verification Failed: The entered details (Leader Name, Roll Number, Department, or Email) do not match our database records for Team '" + cleanTeam + "'. Please ensure your credentials match your Odyssey registration.");
+            populateFormModel(model, teamName, leaderName, rollNumber, dept, otherDept, email, message);
+            return "student-response";
+        }
+
+        // Use canonical registered team name casing
+        String canonicalTeam = matchedReg.get().getTeamName() != null ? matchedReg.get().getTeamName() : teamName.trim();
+
         StudentResponse responseObj = new StudentResponse(
-                teamName.trim(),
+                canonicalTeam,
                 leaderName.trim(),
                 rollNumber.trim().toUpperCase(),
                 finalDept,
@@ -89,8 +124,23 @@ public class StudentResponseController {
         responseRepository.save(responseObj);
 
         redirectAttributes.addFlashAttribute("successMessage",
-                "Thank you, Team " + teamName.trim() + "! Your message about Odyssey 2026 has been successfully recorded.");
+                "Thank you, Team " + canonicalTeam + "! Your message about Odyssey 2026 has been successfully verified and recorded.");
         return "redirect:/student-response?submitted=true";
+    }
+
+    private void populateFormModel(Model model, String teamName, String leaderName, String rollNumber,
+            String dept, String otherDept, String email, String message) {
+        model.addAttribute("prevTeamName", teamName);
+        model.addAttribute("prevLeaderName", leaderName);
+        model.addAttribute("prevRollNumber", rollNumber);
+        model.addAttribute("prevDept", dept);
+        model.addAttribute("prevOtherDept", otherDept);
+        model.addAttribute("prevEmail", email);
+        model.addAttribute("prevMessage", message);
+
+        List<StudentResponse> allResponses = responseRepository.findAllByOrderBySubmittedAtDesc();
+        model.addAttribute("totalCount", allResponses.size());
+        model.addAttribute("recentResponses", allResponses.stream().limit(12).toList());
     }
 
     @GetMapping("/admin/responses")

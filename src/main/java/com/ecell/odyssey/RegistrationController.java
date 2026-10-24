@@ -99,40 +99,12 @@ public class RegistrationController {
                     "The Team Name '" + finalTeamName + "' is already registered in the database. Please choose a different unique Team Name.");
             model.addAttribute("eventName", "Odyssey");
             model.addAttribute("tagline", "Beyond the Horizon");
-
-            // Preserve all entered values
-            model.addAttribute("prevTeamName", teamName);
-            model.addAttribute("prevLeaderName", leaderName);
-            model.addAttribute("prevLeaderEmail", leaderEmail);
-            model.addAttribute("prevLeaderPhone", leaderPhone);
-            model.addAttribute("prevRollNumber", rollNumber);
-            model.addAttribute("prevDept", dept);
-            model.addAttribute("prevOtherDept", otherDept);
-            model.addAttribute("prevYear", year);
-            model.addAttribute("prevSection", section);
-            model.addAttribute("prevCollege", college);
-            model.addAttribute("teamSize", safeTeamSize);
-            model.addAttribute("prevUtr", utr);
-
-            model.addAttribute("prevMember2Name", member2Name);
-            model.addAttribute("prevMember2Email", member2Email);
-            model.addAttribute("prevMember2Phone", member2Phone);
-            model.addAttribute("prevMember2RollNumber", member2RollNumber);
-
-            model.addAttribute("prevMember3Name", member3Name);
-            model.addAttribute("prevMember3Email", member3Email);
-            model.addAttribute("prevMember3Phone", member3Phone);
-            model.addAttribute("prevMember3RollNumber", member3RollNumber);
-
-            model.addAttribute("prevMember4Name", member4Name);
-            model.addAttribute("prevMember4Email", member4Email);
-            model.addAttribute("prevMember4Phone", member4Phone);
-            model.addAttribute("prevMember4RollNumber", member4RollNumber);
-
-            model.addAttribute("prevMember5Name", member5Name);
-            model.addAttribute("prevMember5Email", member5Email);
-            model.addAttribute("prevMember5Phone", member5Phone);
-            model.addAttribute("prevMember5RollNumber", member5RollNumber);
+            preserveRegistrationAttributes(model, teamName, leaderName, leaderEmail, leaderPhone, rollNumber, dept,
+                    otherDept, year, section, college, safeTeamSize, utr,
+                    member2Name, member2Email, member2Phone, member2RollNumber,
+                    member3Name, member3Email, member3Phone, member3RollNumber,
+                    member4Name, member4Email, member4Phone, member4RollNumber,
+                    member5Name, member5Email, member5Phone, member5RollNumber);
             return "register";
         }
 
@@ -152,45 +124,60 @@ public class RegistrationController {
                 && !member5Phone.isBlank() && !member5RollNumber.isBlank());
 
         if (!leaderValid || !member2Valid || !member3Valid || !member4Valid || !member5Valid) {
-
             model.addAttribute("errorMessage",
                     "Please provide all required details including Team Name, Department, Leader, and all team members (minimum 3 persons per group required).");
             model.addAttribute("eventName", "Odyssey");
             model.addAttribute("tagline", "Beyond the Horizon");
+            preserveRegistrationAttributes(model, teamName, leaderName, leaderEmail, leaderPhone, rollNumber, dept,
+                    otherDept, year, section, college, safeTeamSize, utr,
+                    member2Name, member2Email, member2Phone, member2RollNumber,
+                    member3Name, member3Email, member3Phone, member3RollNumber,
+                    member4Name, member4Email, member4Phone, member4RollNumber,
+                    member5Name, member5Email, member5Phone, member5RollNumber);
+            return "register";
+        }
 
-            // Preserve entered values
-            model.addAttribute("prevTeamName", teamName);
-            model.addAttribute("prevLeaderName", leaderName);
-            model.addAttribute("prevLeaderEmail", leaderEmail);
-            model.addAttribute("prevLeaderPhone", leaderPhone);
-            model.addAttribute("prevRollNumber", rollNumber);
-            model.addAttribute("prevDept", dept);
-            model.addAttribute("prevOtherDept", otherDept);
-            model.addAttribute("prevYear", year);
-            model.addAttribute("prevSection", section);
-            model.addAttribute("prevCollege", college);
-            model.addAttribute("teamSize", safeTeamSize);
-            model.addAttribute("prevUtr", utr);
+        // 3. Validation for names: must only contain letters, spaces, and dots (.)
+        String nameRegex = "^[a-zA-Z\\s.]+$";
+        boolean leaderNameValid = leaderName.trim().matches(nameRegex);
+        boolean member2NameValid = member2Name.trim().matches(nameRegex);
+        boolean member3NameValid = member3Name.trim().matches(nameRegex);
+        boolean member4NameValid = (safeTeamSize < 4) || member4Name.trim().matches(nameRegex);
+        boolean member5NameValid = (safeTeamSize < 5) || member5Name.trim().matches(nameRegex);
 
-            model.addAttribute("prevMember2Name", member2Name);
-            model.addAttribute("prevMember2Email", member2Email);
-            model.addAttribute("prevMember2Phone", member2Phone);
-            model.addAttribute("prevMember2RollNumber", member2RollNumber);
+        if (!leaderNameValid || !member2NameValid || !member3NameValid || !member4NameValid || !member5NameValid) {
+            model.addAttribute("errorMessage",
+                    "Names can only contain letters, spaces, and dots (.) — no numbers or other special characters are permitted.");
+            model.addAttribute("eventName", "Odyssey");
+            model.addAttribute("tagline", "Beyond the Horizon");
+            preserveRegistrationAttributes(model, teamName, leaderName, leaderEmail, leaderPhone, rollNumber, dept,
+                    otherDept, year, section, college, safeTeamSize, utr,
+                    member2Name, member2Email, member2Phone, member2RollNumber,
+                    member3Name, member3Email, member3Phone, member3RollNumber,
+                    member4Name, member4Email, member4Phone, member4RollNumber,
+                    member5Name, member5Email, member5Phone, member5RollNumber);
+            return "register";
+        }
 
-            model.addAttribute("prevMember3Name", member3Name);
-            model.addAttribute("prevMember3Email", member3Email);
-            model.addAttribute("prevMember3Phone", member3Phone);
-            model.addAttribute("prevMember3RollNumber", member3RollNumber);
+        // 4. Validation for phone numbers: must be strictly 10 digits
+        String phoneRegex = "^[0-9]{10}$";
+        boolean leaderPhoneValid = leaderPhone.trim().matches(phoneRegex);
+        boolean member2PhoneValid = member2Phone.trim().matches(phoneRegex);
+        boolean member3PhoneValid = member3Phone.trim().matches(phoneRegex);
+        boolean member4PhoneValid = (safeTeamSize < 4) || member4Phone.trim().matches(phoneRegex);
+        boolean member5PhoneValid = (safeTeamSize < 5) || member5Phone.trim().matches(phoneRegex);
 
-            model.addAttribute("prevMember4Name", member4Name);
-            model.addAttribute("prevMember4Email", member4Email);
-            model.addAttribute("prevMember4Phone", member4Phone);
-            model.addAttribute("prevMember4RollNumber", member4RollNumber);
-
-            model.addAttribute("prevMember5Name", member5Name);
-            model.addAttribute("prevMember5Email", member5Email);
-            model.addAttribute("prevMember5Phone", member5Phone);
-            model.addAttribute("prevMember5RollNumber", member5RollNumber);
+        if (!leaderPhoneValid || !member2PhoneValid || !member3PhoneValid || !member4PhoneValid || !member5PhoneValid) {
+            model.addAttribute("errorMessage",
+                    "Phone numbers must be exactly 10 digits without country code or spaces.");
+            model.addAttribute("eventName", "Odyssey");
+            model.addAttribute("tagline", "Beyond the Horizon");
+            preserveRegistrationAttributes(model, teamName, leaderName, leaderEmail, leaderPhone, rollNumber, dept,
+                    otherDept, year, section, college, safeTeamSize, utr,
+                    member2Name, member2Email, member2Phone, member2RollNumber,
+                    member3Name, member3Email, member3Phone, member3RollNumber,
+                    member4Name, member4Email, member4Phone, member4RollNumber,
+                    member5Name, member5Email, member5Phone, member5RollNumber);
             return "register";
         }
 
@@ -686,6 +673,47 @@ public class RegistrationController {
         response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(response.getOutputStream(), list);
+    }
+
+    private void preserveRegistrationAttributes(Model model, String teamName, String leaderName, String leaderEmail,
+            String leaderPhone, String rollNumber, String dept, String otherDept, String year, String section,
+            String college, int teamSize, String utr, String member2Name, String member2Email, String member2Phone,
+            String member2RollNumber, String member3Name, String member3Email, String member3Phone,
+            String member3RollNumber, String member4Name, String member4Email, String member4Phone,
+            String member4RollNumber, String member5Name, String member5Email, String member5Phone,
+            String member5RollNumber) {
+        model.addAttribute("prevTeamName", teamName);
+        model.addAttribute("prevLeaderName", leaderName);
+        model.addAttribute("prevLeaderEmail", leaderEmail);
+        model.addAttribute("prevLeaderPhone", leaderPhone);
+        model.addAttribute("prevRollNumber", rollNumber);
+        model.addAttribute("prevDept", dept);
+        model.addAttribute("prevOtherDept", otherDept);
+        model.addAttribute("prevYear", year);
+        model.addAttribute("prevSection", section);
+        model.addAttribute("prevCollege", college);
+        model.addAttribute("teamSize", teamSize);
+        model.addAttribute("prevUtr", utr);
+
+        model.addAttribute("prevMember2Name", member2Name);
+        model.addAttribute("prevMember2Email", member2Email);
+        model.addAttribute("prevMember2Phone", member2Phone);
+        model.addAttribute("prevMember2RollNumber", member2RollNumber);
+
+        model.addAttribute("prevMember3Name", member3Name);
+        model.addAttribute("prevMember3Email", member3Email);
+        model.addAttribute("prevMember3Phone", member3Phone);
+        model.addAttribute("prevMember3RollNumber", member3RollNumber);
+
+        model.addAttribute("prevMember4Name", member4Name);
+        model.addAttribute("prevMember4Email", member4Email);
+        model.addAttribute("prevMember4Phone", member4Phone);
+        model.addAttribute("prevMember4RollNumber", member4RollNumber);
+
+        model.addAttribute("prevMember5Name", member5Name);
+        model.addAttribute("prevMember5Email", member5Email);
+        model.addAttribute("prevMember5Phone", member5Phone);
+        model.addAttribute("prevMember5RollNumber", member5RollNumber);
     }
 
     private String escapeCsv(String value) {

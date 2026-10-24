@@ -390,6 +390,82 @@ public class RegistrationService {
             });
     }
 
+    public java.util.Optional<Registration> verifyTeamCredentials(String teamName, String leaderName, String rollNumber, String dept, String email) {
+        if (teamName == null || leaderName == null || rollNumber == null || dept == null || email == null) {
+            return java.util.Optional.empty();
+        }
+        String cleanTeam = teamName.trim();
+        String cleanName = leaderName.trim();
+        String cleanRoll = rollNumber.trim();
+        String cleanDept = dept.trim();
+        String cleanEmail = email.trim();
+
+        if (cleanTeam.isEmpty() || cleanName.isEmpty() || cleanRoll.isEmpty() || cleanDept.isEmpty() || cleanEmail.isEmpty()) {
+            return java.util.Optional.empty();
+        }
+
+        List<Registration> all = repository.findAll();
+        return all.stream()
+            .filter(r -> matchesTeam(r.getTeamName(), cleanTeam))
+            .filter(r -> {
+                // Check primary leader details on this record
+                if (matchesPerson(r.getLeaderName(), r.getRollNumber(), r.getDept(), r.getLeaderEmail(),
+                        cleanName, cleanRoll, cleanDept, cleanEmail)) {
+                    return true;
+                }
+                // Check member 2 on this record
+                if (matchesPerson(r.getMember2Name(), r.getMember2RollNumber(), r.getDept(), r.getMember2Email(),
+                        cleanName, cleanRoll, cleanDept, cleanEmail)) {
+                    return true;
+                }
+                // Check member 3 on this record
+                if (matchesPerson(r.getMember3Name(), r.getMember3RollNumber(), r.getDept(), r.getMember3Email(),
+                        cleanName, cleanRoll, cleanDept, cleanEmail)) {
+                    return true;
+                }
+                // Check member 4 on this record
+                if (matchesPerson(r.getMember4Name(), r.getMember4RollNumber(), r.getDept(), r.getMember4Email(),
+                        cleanName, cleanRoll, cleanDept, cleanEmail)) {
+                    return true;
+                }
+                // Check member 5 on this record
+                if (matchesPerson(r.getMember5Name(), r.getMember5RollNumber(), r.getDept(), r.getMember5Email(),
+                        cleanName, cleanRoll, cleanDept, cleanEmail)) {
+                    return true;
+                }
+                return false;
+            })
+            .findFirst();
+    }
+
+    private boolean matchesTeam(String t1, String t2) {
+        if (t1 == null || t2 == null) return false;
+        return t1.trim().replaceAll("\\s+", " ").equalsIgnoreCase(t2.trim().replaceAll("\\s+", " "));
+    }
+
+    private boolean matchesPerson(String dbName, String dbRoll, String dbDept, String dbEmail,
+                                  String inName, String inRoll, String inDept, String inEmail) {
+        if (dbName == null || dbRoll == null || dbEmail == null) return false;
+        if (dbName.isBlank() || dbRoll.isBlank() || dbEmail.isBlank()) return false;
+
+        boolean nameOk = dbName.trim().replaceAll("\\s+", " ").equalsIgnoreCase(inName.replaceAll("\\s+", " "));
+        boolean rollOk = dbRoll.replaceAll("\\s+", "").equalsIgnoreCase(inRoll.replaceAll("\\s+", ""));
+        boolean emailOk = dbEmail.trim().equalsIgnoreCase(inEmail);
+        boolean deptOk = matchesDept(dbDept, inDept);
+
+        return nameOk && rollOk && emailOk && deptOk;
+    }
+
+    private boolean matchesDept(String dbDept, String inDept) {
+        if (dbDept == null || inDept == null) return false;
+        String s1 = dbDept.trim().toLowerCase();
+        String s2 = inDept.trim().toLowerCase();
+        if (s1.equals(s2)) return true;
+        if (s1.contains("(" + s2 + ")") || s2.contains("(" + s1 + ")")) return true;
+        if (s1.startsWith(s2) || s2.startsWith(s1)) return true;
+        return false;
+    }
+
     @Transactional
     public boolean deleteRegistration(String id) {
         if (id == null || id.isBlank()) {

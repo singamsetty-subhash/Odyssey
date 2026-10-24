@@ -22,7 +22,8 @@
             <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo"
                 class="nav-logo-img">
         </a>
-        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"
+            aria-controls="navMenu">
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
@@ -106,8 +107,10 @@
 
                     <div class="form-group">
                         <label class="form-label" for="leaderName">Full Name <span class="required">*</span></label>
-                        <input type="text" id="leaderName" name="leaderName" class="form-input" placeholder="e.g. rahul"
-                            th:value="${prevLeaderName}" required>
+                        <input type="text" id="leaderName" name="leaderName" class="form-input name-field"
+                            placeholder="e.g. Rahul Sharma" pattern="[a-zA-Z\s.]+"
+                            title="Name can only contain letters, spaces, and periods (.)" th:value="${prevLeaderName}"
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -125,8 +128,10 @@
 
                     <div class="form-group">
                         <label class="form-label" for="leaderPhone">Phone Number <span class="required">*</span></label>
-                        <input type="tel" id="leaderPhone" name="leaderPhone" class="form-input"
-                            placeholder="+91  98......." th:value="${prevLeaderPhone}" required>
+                        <input type="tel" id="leaderPhone" name="leaderPhone" class="form-input phone-field"
+                            placeholder="9876543210" pattern="[0-9]{10}" maxlength="10" minlength="10"
+                            inputmode="numeric" title="Please enter a valid 10-digit mobile number"
+                            th:value="${prevLeaderPhone}" required>
                     </div>
 
                     <div class="form-group">
@@ -237,8 +242,10 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Full Name <span class="required">*</span></label>
-                                <input type="text" name="member2Name" class="form-input"
-                                    placeholder="Member 2 Full Name" th:value="${prevMember2Name}" required>
+                                <input type="text" id="member2Name" name="member2Name" class="form-input name-field"
+                                    placeholder="Member 2 Full Name" pattern="[a-zA-Z\s.]+"
+                                    title="Name can only contain letters, spaces, and periods (.)"
+                                    th:value="${prevMember2Name}" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address <span class="required">*</span></label>
@@ -247,7 +254,9 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Phone Number <span class="required">*</span></label>
-                                <input type="tel" name="member2Phone" class="form-input" placeholder="+91 98765 43210"
+                                <input type="tel" id="member2Phone" name="member2Phone" class="form-input phone-field"
+                                    placeholder="9876543210" pattern="[0-9]{10}" maxlength="10" minlength="10"
+                                    inputmode="numeric" title="Please enter a valid 10-digit mobile number"
                                     th:value="${prevMember2Phone}" required>
                             </div>
                             <div class="form-group">
@@ -267,8 +276,10 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Full Name <span class="required">*</span></label>
-                                <input type="text" name="member3Name" class="form-input"
-                                    placeholder="Member 3 Full Name" th:value="${prevMember3Name}" required>
+                                <input type="text" id="member3Name" name="member3Name" class="form-input name-field"
+                                    placeholder="Member 3 Full Name" pattern="[a-zA-Z\s.]+"
+                                    title="Name can only contain letters, spaces, and periods (.)"
+                                    th:value="${prevMember3Name}" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address <span class="required">*</span></label>
@@ -277,7 +288,9 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Phone Number <span class="required">*</span></label>
-                                <input type="tel" name="member3Phone" class="form-input" placeholder="+91 98765 43210"
+                                <input type="tel" id="member3Phone" name="member3Phone" class="form-input phone-field"
+                                    placeholder="9876543210" pattern="[0-9]{10}" maxlength="10" minlength="10"
+                                    inputmode="numeric" title="Please enter a valid 10-digit mobile number"
                                     th:value="${prevMember3Phone}" required>
                             </div>
                             <div class="form-group">
@@ -297,8 +310,10 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Full Name <span class="required">*</span></label>
-                                <input type="text" name="member4Name" class="form-input"
-                                    placeholder="Member 4 Full Name" th:value="${prevMember4Name}">
+                                <input type="text" id="member4Name" name="member4Name" class="form-input name-field"
+                                    placeholder="Member 4 Full Name" pattern="[a-zA-Z\s.]+"
+                                    title="Name can only contain letters, spaces, and periods (.)"
+                                    th:value="${prevMember4Name}">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address <span class="required">*</span></label>
@@ -307,7 +322,9 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Phone Number <span class="required">*</span></label>
-                                <input type="tel" name="member4Phone" class="form-input" placeholder="+91 98765 43210"
+                                <input type="tel" id="member4Phone" name="member4Phone" class="form-input phone-field"
+                                    placeholder="9876543210" pattern="[0-9]{10}" maxlength="10" minlength="10"
+                                    inputmode="numeric" title="Please enter a valid 10-digit mobile number"
                                     th:value="${prevMember4Phone}">
                             </div>
                             <div class="form-group">
@@ -327,8 +344,10 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Full Name <span class="required">*</span></label>
-                                <input type="text" name="member5Name" class="form-input"
-                                    placeholder="Member 5 Full Name" th:value="${prevMember5Name}">
+                                <input type="text" id="member5Name" name="member5Name" class="form-input name-field"
+                                    placeholder="Member 5 Full Name" pattern="[a-zA-Z\s.]+"
+                                    title="Name can only contain letters, spaces, and periods (.)"
+                                    th:value="${prevMember5Name}">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address <span class="required">*</span></label>
@@ -337,7 +356,9 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Phone Number <span class="required">*</span></label>
-                                <input type="tel" name="member5Phone" class="form-input" placeholder="+91 98765 43210"
+                                <input type="tel" id="member5Phone" name="member5Phone" class="form-input phone-field"
+                                    placeholder="9876543210" pattern="[0-9]{10}" maxlength="10" minlength="10"
+                                    inputmode="numeric" title="Please enter a valid 10-digit mobile number"
                                     th:value="${prevMember5Phone}">
                             </div>
                             <div class="form-group">
@@ -374,7 +395,8 @@
                             <!-- PhonePe Standee with Authentic Scannable Original QR -->
                             <div class="phonepe-standee-wrapper">
                                 <img th:src="@{/images/payment.jpeg}" src="/images/payment.jpeg"
-                                    alt="PhonePe QR Standee - Shaik Sumaya" class="standee-bg-img" id="officialStandeeImg">
+                                    alt="PhonePe QR Standee - Shaik Sumaya" class="standee-bg-img"
+                                    id="officialStandeeImg">
                             </div>
 
                             <!-- Payee Name & Verified UPI ID -->
@@ -393,11 +415,13 @@
                             <!-- UPI Actions & Quick Copy Options -->
                             <div class="upi-details-wrap">
                                 <div class="upi-copy-row">
-                                    <button type="button" class="upi-copy-btn" id="copyUpiBtn" title="Click to copy UPI ID">
+                                    <button type="button" class="upi-copy-btn" id="copyUpiBtn"
+                                        title="Click to copy UPI ID">
                                         <span id="copyBtnText">7981705559-4@ybl</span>
                                         <span>&#128203; Copy UPI</span>
                                     </button>
-                                    <button type="button" class="upi-copy-btn phone-btn" id="copyPhoneBtn" title="Click to copy Mobile Number">
+                                    <button type="button" class="upi-copy-btn phone-btn" id="copyPhoneBtn"
+                                        title="Click to copy Mobile Number">
                                         <span id="copyPhoneBtnText">7981705559</span>
                                         <span>&#128222; Copy Mobile</span>
                                     </button>
@@ -409,8 +433,10 @@
                                         class="btn-upi-pay">
                                         <span>&#128241; Tap to Pay &#8377;300 via UPI App</span> &rarr;
                                     </a>
-                                    <div class="upi-pay-note" style="font-size: 0.72rem; color: var(--foam); text-align: center; margin-top: 0.35rem; opacity: 0.9;">
-                                        ⚡ Opens in UPI Scanner Mode &middot; Enter <strong>&#8377;<span id="amountHint">300</span></strong> to pay
+                                    <div class="upi-pay-note"
+                                        style="font-size: 0.72rem; color: var(--foam); text-align: center; margin-top: 0.35rem; opacity: 0.9;">
+                                        ⚡ Opens in UPI Scanner Mode &middot; Enter <strong>&#8377;<span
+                                                id="amountHint">300</span></strong> to pay
                                     </div>
                                 </div>
                             </div>
@@ -423,7 +449,9 @@
                                 <p class="payment-help-text">
                                     Banks often restrict browser payment links.
                                     <br>
-                                    <strong>Solution:</strong> Open <strong>PhonePe</strong>, <strong>Google Pay</strong>, or <strong>Paytm</strong> directly &rarr; <strong>Scan the QR code above</strong> or send to Mobile Number <strong>7981705559</strong>.
+                                    <strong>Solution:</strong> Open <strong>PhonePe</strong>, <strong>Google
+                                        Pay</strong>, or <strong>Paytm</strong> directly &rarr; <strong>Scan the QR code
+                                        above</strong> or send to Mobile Number <strong>7981705559</strong>.
                                 </p>
                             </div>
                         </div>
@@ -496,12 +524,13 @@
 
     <footer class="footer">
         <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a
-                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a
-                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship
+                Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank"
+                rel="noopener noreferrer">kitsecellgnt.com</a></p>
     </footer>
 
     <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
-    <script th:src="@{/js/register.js(v=8)}" src="/js/register.js?v=8"></script>
+    <script th:src="@{/js/register.js(v=9)}" src="/js/register.js?v=9"></script>
 </body>
 
 </html>
