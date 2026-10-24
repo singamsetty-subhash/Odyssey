@@ -59,6 +59,7 @@
             font-weight: 800;
             letter-spacing: 1px;
             background: linear-gradient(135deg, #ffffff 0%, var(--foam) 50%, var(--aqua) 100%);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 0 0 0.8rem 0;

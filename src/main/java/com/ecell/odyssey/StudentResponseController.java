@@ -191,6 +191,49 @@ public class StudentResponseController {
         writer.flush();
     }
 
+    @PostMapping("/admin/responses/delete")
+    public String deleteResponse(
+            @RequestParam("id") Long id,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        if (session == null || !Boolean.TRUE.equals(session.getAttribute("adminLoggedIn"))) {
+            return "redirect:/admin/login?redirect=/admin/responses";
+        }
+
+        if (responseRepository.existsById(id)) {
+            responseRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Student Response #" + id + " has been permanently deleted from the database.");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Failed to delete response #" + id + ": Record not found in database.");
+        }
+        return "redirect:/admin/responses";
+    }
+
+    @PostMapping("/api/admin/responses/delete")
+    @ResponseBody
+    public java.util.Map<String, Object> apiDeleteResponse(
+            @RequestParam("id") Long id,
+            HttpSession session) {
+        java.util.Map<String, Object> res = new java.util.HashMap<>();
+        if (session == null || !Boolean.TRUE.equals(session.getAttribute("adminLoggedIn"))) {
+            res.put("success", false);
+            res.put("error", "Unauthorized. Please authenticate at /admin/login");
+            return res;
+        }
+
+        if (responseRepository.existsById(id)) {
+            responseRepository.deleteById(id);
+            res.put("success", true);
+            res.put("message", "Response #" + id + " permanently deleted from database.");
+        } else {
+            res.put("success", false);
+            res.put("message", "Response #" + id + " not found.");
+        }
+        return res;
+    }
+
     @GetMapping("/api/student-responses")
     @ResponseBody
     public Object apiStudentResponses(HttpSession session) {

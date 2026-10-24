@@ -12,6 +12,12 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,17 +33,14 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
     private final ObjectMapper objectMapper;
-    private final SupabaseStorageService supabaseStorage;
     private final String adminUsername;
     private final String adminPassword;
 
     public RegistrationController(RegistrationService registrationService, ObjectMapper objectMapper,
-            SupabaseStorageService supabaseStorage,
             @Value("${odyssey.admin.username:admin}") String adminUsername,
             @Value("${odyssey.admin.password:admin123}") String adminPassword) {
         this.registrationService = registrationService;
         this.objectMapper = objectMapper;
-        this.supabaseStorage = supabaseStorage;
         this.adminUsername = adminUsername;
         this.adminPassword = adminPassword;
     }
@@ -181,44 +184,42 @@ public class RegistrationController {
             return "register";
         }
 
-        // Handle Payment Screenshot Upload
-        // Preferred: Supabase Storage (permanent public URL). Fallback: local uploads/ folder.
+        // Handle Payment Screenshot Upload (Stored directly in MySQL Database)
+        byte[] paymentImageBytes = null;
+        String paymentImageType = "image/png";
         String paymentImagePath = "";
+
         if (paymentImage != null && !paymentImage.isEmpty()) {
-            String originalFilename = paymentImage.getOriginalFilename();
-            String ext = "";
-            if (originalFilename != null && originalFilename.contains(".")) {
-                ext = originalFilename.substring(originalFilename.lastIndexOf("."));
-            }
-            String safeRoll = rollNumber.replaceAll("[^a-zA-Z0-9]", "");
-            String filename = "pay_" + System.currentTimeMillis() + "_" + safeRoll + ext;
-
-            // 1. Try Supabase Storage first
-            if (supabaseStorage.isConfigured()) {
-                try {
-                    paymentImagePath = supabaseStorage.upload("payments/" + filename,
-                            paymentImage.getBytes(), paymentImage.getContentType());
-                } catch (IOException e) {
-                    paymentImagePath = "";
+            try {
+                paymentImageBytes = paymentImage.getBytes();
+                String detectedType = paymentImage.getContentType();
+                if (detectedType != null && !detectedType.isBlank()) {
+                    paymentImageType = detectedType.trim();
                 }
+            } catch (IOException e) {
+                paymentImageBytes = null;
             }
 
-            // 2. Fallback to local disk
-            if (paymentImagePath == null || paymentImagePath.isEmpty()) {
-                paymentImagePath = "";
-                try {
-                    Path uploadDir = Paths.get("uploads", "payments");
-                    if (!Files.exists(uploadDir)) {
-                        Files.createDirectories(uploadDir);
-                    }
-                    Path destination = uploadDir.resolve(filename);
-                    try (InputStream inputStream = paymentImage.getInputStream()) {
-                        Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
-                    }
-                    paymentImagePath = "/uploads/payments/" + filename;
-                } catch (IOException e) {
-                    paymentImagePath = "";
+            // Also write a copy to disk if uploads directory is accessible
+            try {
+                String originalFilename = paymentImage.getOriginalFilename();
+                String ext = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    ext = originalFilename.substring(originalFilename.lastIndexOf("."));
                 }
+                String safeRoll = rollNumber.replaceAll("[^a-zA-Z0-9]", "");
+                String filename = "pay_" + System.currentTimeMillis() + "_" + safeRoll + ext;
+
+                Path uploadDir = Paths.get("uploads", "payments").toAbsolutePath().normalize();
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
+                }
+                Path destination = uploadDir.resolve(filename);
+                if (paymentImageBytes != null) {
+                    Files.write(destination, paymentImageBytes);
+                }
+                paymentImagePath = "/uploads/payments/" + filename;
+            } catch (Exception ignored) {
             }
         }
 
@@ -231,7 +232,7 @@ public class RegistrationController {
         Registration reg = registrationService.register(
                 finalTeamName, track, stage, pitchSummary, deckUrl,
                 leaderName, leaderEmail, leaderPhone, rollNumber, finalDept, year, section, college,
-                calculatedAmount, utr, paymentImagePath, safeTeamSize,
+                calculatedAmount, utr, paymentImagePath, paymentImageBytes, paymentImageType, safeTeamSize,
                 member2Name, member2Email, member2Phone, member2RollNumber, "",
                 member3Name, member3Email, member3Phone, member3RollNumber, "",
                 member4Name, member4Email, member4Phone, member4RollNumber, "",
@@ -714,6 +715,120 @@ public class RegistrationController {
         model.addAttribute("prevMember5Email", member5Email);
         model.addAttribute("prevMember5Phone", member5Phone);
         model.addAttribute("prevMember5RollNumber", member5RollNumber);
+    }
+
+    @GetMapping({"/register/payment-image/{id}", "/api/registrations/{id}/payment-image"})
+    @ResponseBody
+    public ResponseEntity<byte[]> getPaymentImageFromDatabase(@PathVariable String id) {
+        if (id == null || id.isBlank()) {
+            return ResponseEntity.notFound().build();
+        }
+        Optional<Registration> regOpt = registrationService.findById(id.trim());
+        if (regOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Registration reg = regOpt.get();
+        byte[] imageBytes = reg.getPaymentImageBytes();
+        String contentType = reg.getPaymentImageType();
+
+        // If this record is a member with no direct bytes, look up the group leader
+        if ((imageBytes == null || imageBytes.length == 0) && reg.getGroupId() != null && !reg.getGroupId().isBlank() && !reg.getGroupId().equalsIgnoreCase(reg.getId())) {
+            Optional<Registration> leaderOpt = registrationService.findById(reg.getGroupId());
+            if (leaderOpt.isPresent()) {
+                imageBytes = leaderOpt.get().getPaymentImageBytes();
+                contentType = leaderOpt.get().getPaymentImageType();
+            }
+        }
+
+        // Serve from MySQL Database
+        if (imageBytes != null && imageBytes.length > 0) {
+            if (contentType == null || contentType.isBlank()) {
+                contentType = "image/png";
+            }
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"payment_proof_" + reg.getId() + ".png\"")
+                    .header(HttpHeaders.CACHE_CONTROL, "max-age=86400, public")
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(imageBytes);
+        }
+
+        // Fallback: If not stored as BLOB, try to serve from local disk if it exists
+        if (reg.getPaymentImagePath() != null && reg.getPaymentImagePath().contains("/uploads/payments/")) {
+            String fname = reg.getPaymentImagePath().substring(reg.getPaymentImagePath().lastIndexOf("/") + 1);
+            try {
+                Path localFile = Paths.get("uploads", "payments").resolve(fname).normalize();
+                if (Files.exists(localFile) && Files.isReadable(localFile)) {
+                    byte[] fileBytes = Files.readAllBytes(localFile);
+                    String fileContentType = Files.probeContentType(localFile);
+                    if (fileContentType == null) {
+                        fileContentType = "image/png";
+                    }
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fname + "\"")
+                            .header(HttpHeaders.CACHE_CONTROL, "max-age=86400, public")
+                            .contentType(MediaType.parseMediaType(fileContentType))
+                            .body(fileBytes);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/uploads/payments/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<byte[]> servePaymentImage(@PathVariable String filename) {
+        // 1. Try serving from local disk first if present
+        try {
+            Path baseDir = Paths.get("uploads", "payments").toAbsolutePath().normalize();
+            Path filePath = baseDir.resolve(filename).normalize();
+
+            if (filePath.startsWith(baseDir) && Files.exists(filePath) && Files.isReadable(filePath)) {
+                String contentType = Files.probeContentType(filePath);
+                if (contentType == null) {
+                    contentType = "image/png";
+                }
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                        .header(HttpHeaders.CACHE_CONTROL, "max-age=86400, public")
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(Files.readAllBytes(filePath));
+            }
+        } catch (Exception ignored) {
+        }
+
+        // 2. If not on local disk (e.g. wiped by Railway restart), load directly from MySQL database!
+        try {
+            Optional<Registration> regOpt = registrationService.findByPaymentImagePathFilename(filename);
+            if (regOpt.isPresent()) {
+                Registration reg = regOpt.get();
+                byte[] bytes = reg.getPaymentImageBytes();
+                String type = reg.getPaymentImageType();
+
+                if ((bytes == null || bytes.length == 0) && reg.getGroupId() != null && !reg.getGroupId().isBlank()) {
+                    Optional<Registration> leaderOpt = registrationService.findById(reg.getGroupId());
+                    if (leaderOpt.isPresent()) {
+                        bytes = leaderOpt.get().getPaymentImageBytes();
+                        type = leaderOpt.get().getPaymentImageType();
+                    }
+                }
+
+                if (bytes != null && bytes.length > 0) {
+                    if (type == null || type.isBlank()) {
+                        type = "image/png";
+                    }
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                            .header(HttpHeaders.CACHE_CONTROL, "max-age=86400, public")
+                            .contentType(MediaType.parseMediaType(type))
+                            .body(bytes);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     private String escapeCsv(String value) {

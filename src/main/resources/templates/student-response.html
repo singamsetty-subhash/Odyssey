@@ -15,7 +15,7 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css(v=18)}" href="/css/style.css?v=18">
-    <link rel="stylesheet" th:href="@{/css/student-response.css(v=1)}" href="/css/student-response.css?v=1">
+    <link rel="stylesheet" th:href="@{/css/student-response.css(v=2)}" href="/css/student-response.css?v=2">
 </head>
 
 <body class="response-page">
@@ -78,9 +78,8 @@
             <span th:text="${errorMessage}">Please fill in all required fields.</span>
         </div>
 
-        <!-- 2-Column Layout: Response Form & Live Team Voices Wall -->
-        <div class="response-layout-grid">
-            <!-- Left Form Card -->
+        <!-- Centered Response Form Card -->
+        <div class="response-card-wrapper">
             <section class="response-card">
                 <div class="response-card-head">
                     <div class="response-icon-wrap">&#9997;</div>
@@ -189,40 +188,6 @@
                     </button>
                 </form>
             </section>
-
-            <!-- Right Feed: Voices of Odyssey / What Teams Are Saying -->
-            <!-- <aside class="feed-card">
-                <h3 class="feed-title">
-                    <span>&#128227;</span>
-                    <span>Voices of Odyssey (<span th:text="${totalCount}">0</span>)</span>
-                </h3>
-                <p style="font-size: 0.82rem; color: var(--muted); margin: 0 0 1.2rem 0; line-height: 1.4;">
-                    Live messages submitted by registered student groups and innovators.
-                </p>
-
-                <div class="feed-list" th:if="${recentResponses != null and !recentResponses.isEmpty()}">
-                    <article th:each="r : ${recentResponses}" class="message-bubble">
-                        <div class="bubble-header">
-                            <span class="bubble-team" th:text="${r.teamName}">Cyber Guardians</span>
-                            <span class="bubble-dept" th:text="${r.dept}">CSE</span>
-                        </div>
-                        <p class="bubble-text" th:text="'&ldquo;' + ${r.message} + '&rdquo;'">
-                            "Excited to pitch our startup model and collaborate with visionary leaders at KITS E-Cell!"
-                        </p>
-                        <div class="bubble-author">
-                            <span th:text="'Lead: ' + ${r.leaderName} + ' (' + ${r.rollNumber} + ')'">Lead: Rahul</span>
-                            <span th:text="${#temporals.format(r.submittedAt, 'MMM dd, yyyy')}">Oct 21, 2026</span>
-                        </div>
-                    </article>
-                </div> -->
-
-            <div th:if="${recentResponses == null or recentResponses.isEmpty()}"
-                style="text-align: center; padding: 3rem 1rem; color: var(--muted);">
-                <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">&#128172;</div>
-                <p style="margin: 0; font-size: 0.88rem;">Be the first team to transmit your message for Odyssey 2026!
-                </p>
-            </div>
-            </aside>
         </div>
     </main>
 

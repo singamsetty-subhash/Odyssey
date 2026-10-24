@@ -60,6 +60,59 @@ public class RegistrationService {
         String member5RollNumber,
         String member5Role
     ) {
+        return register(
+            teamName, track, stage, pitchSummary, deckUrl, leaderName, leaderEmail, leaderPhone,
+            rollNumber, dept, year, section, college, amountPaid, utr, paymentImagePath,
+            null, null, teamSize,
+            member2Name, member2Email, member2Phone, member2RollNumber, member2Role,
+            member3Name, member3Email, member3Phone, member3RollNumber, member3Role,
+            member4Name, member4Email, member4Phone, member4RollNumber, member4Role,
+            member5Name, member5Email, member5Phone, member5RollNumber, member5Role
+        );
+    }
+
+    @Transactional
+    public Registration register(
+        String teamName,
+        String track,
+        String stage,
+        String pitchSummary,
+        String deckUrl,
+        String leaderName,
+        String leaderEmail,
+        String leaderPhone,
+        String rollNumber,
+        String dept,
+        String year,
+        String section,
+        String college,
+        int amountPaid,
+        String utr,
+        String paymentImagePath,
+        byte[] paymentImageBytes,
+        String paymentImageType,
+        int teamSize,
+        String member2Name,
+        String member2Email,
+        String member2Phone,
+        String member2RollNumber,
+        String member2Role,
+        String member3Name,
+        String member3Email,
+        String member3Phone,
+        String member3RollNumber,
+        String member3Role,
+        String member4Name,
+        String member4Email,
+        String member4Phone,
+        String member4RollNumber,
+        String member4Role,
+        String member5Name,
+        String member5Email,
+        String member5Phone,
+        String member5RollNumber,
+        String member5Role
+    ) {
         String groupId = generateUniqueId();
         int safeTeamSize = Math.max(3, Math.min(5, teamSize));
         int safeAmount = safeTeamSize * 100;
@@ -71,6 +124,9 @@ public class RegistrationService {
         String cleanCollege = college != null && !college.isBlank() ? college.trim() : "KITS Singapur";
         String cleanUtr = utr != null ? utr.trim() : "";
         String cleanPaymentImg = paymentImagePath != null ? paymentImagePath.trim() : "";
+        if (paymentImageBytes != null && paymentImageBytes.length > 0) {
+            cleanPaymentImg = "/register/payment-image/" + groupId;
+        }
         LocalDateTime now = LocalDateTime.now();
 
         // 1. Leader Registration Record
@@ -117,6 +173,10 @@ public class RegistrationService {
             groupId,
             now
         );
+        if (paymentImageBytes != null && paymentImageBytes.length > 0) {
+            leaderReg.setPaymentImageBytes(paymentImageBytes);
+            leaderReg.setPaymentImageType(paymentImageType != null && !paymentImageType.isBlank() ? paymentImageType : "image/png");
+        }
         Registration savedLead = repository.save(leaderReg);
 
         // 2. Persist Member 2 as Individual Database Record
@@ -487,5 +547,12 @@ public class RegistrationService {
             repository.delete(reg);
         }
         return true;
+    }
+
+    public Optional<Registration> findByPaymentImagePathFilename(String filename) {
+        if (filename == null || filename.isBlank()) {
+            return Optional.empty();
+        }
+        return repository.findFirstByPaymentImagePathContaining(filename.trim());
     }
 }

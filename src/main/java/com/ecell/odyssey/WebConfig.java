@@ -43,7 +43,15 @@ public class WebConfig implements WebMvcConfigurer {
                 .toAbsolutePath()
                 .normalize();
 
+        try {
+            java.nio.file.Files.createDirectories(uploadDir.resolve("payments"));
+        } catch (Exception ignored) {
+        }
+
         String uploadLocation = uploadDir.toUri().toString();
+        if (!uploadLocation.endsWith("/")) {
+            uploadLocation += "/";
+        }
 
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations(uploadLocation);

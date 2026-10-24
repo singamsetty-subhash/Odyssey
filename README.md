@@ -1,96 +1,125 @@
 # Odyssey: Beyond the Horizon
 
-Ocean-themed event website built with Spring Boot, Thymeleaf, HTML and CSS.
+Ocean-themed event portal and management platform engineered with Spring Boot, Thymeleaf, and Vanilla CSS. Built for the flagship annual entrepreneurship summit hosted by E-Cell at KKR & KSR Institute of Technology and Sciences (KITS).
 
-## Run (local development)
+---
 
-Requires Java 17+ and Maven.
+## Key Features
 
-    mvn spring-boot:run
+- **Event Showcase:** 4-stage entrepreneurship journey, itinerary timeline, and countdown clock.
+- **Dynamic Team Registration:** Supports teams of 3 to 5 participants, live team name uniqueness validation, and dynamic fee calculation (₹100/member: ₹300, ₹400, or ₹500).
+- **Direct Database Image Storage:** Payment proof screenshots are stored directly inside the MySQL database as `LONGBLOB` data and served via `/register/payment-image/{id}`. **No external cloud buckets or persistent volumes required!**
+- **Holographic Digital Boarding Pass:** Dynamic ticketing with unique alphanumeric IDs (`ODY-2026-XXXX`) and one-click iCalendar (`.ics`) sync.
+- **Self-Service Ticket Retrieval:** 4-factor credential verification (`/find-ticket`) for participants who lost their boarding pass link.
+- **Verified Student Feedback:** Review submission portal (`/student-response`) restricted to verified registered teams.
+- **Admin Command Center:** Secure dashboard (`/admin/registrations`) with 30-minute inactivity auto-logout, real-time participant/revenue/department metrics, payment proof viewer, record deletion, and Excel-ready CSV export.
 
-Then open http://localhost:8080
+---
 
-Local defaults expect a PostgreSQL database at `jdbc:postgresql://localhost:5432/odyssey`
-(user `postgres`, password `postgres`). Override with the `DB_URL`, `DB_USERNAME`,
-`DB_PASSWORD` environment variables. Without them (and without Supabase Storage
-configured) the app falls back to local `uploads/` for payment screenshots.
+## Production Deployment (Railway + MySQL)
 
-## Free production deployment (Render + Supabase)
+The application is deployed on **Railway** connected to a **Railway MySQL** database.
 
-Everything runs on free tiers: **Render** (hosting), **Supabase** (PostgreSQL
-database + Storage for payment screenshots), **GitHub** (source code).
+### 1. Database Configuration
+The application automatically binds to Railway's MySQL environment variables:
+- `MYSQL_URL`: e.g. `jdbc:mysql://<host>:<port>/railway`
+- `MYSQLUSER`: MySQL user (default `root`)
+- `MYSQLPASSWORD`: Database password
 
-### 1. Supabase — free database + storage
+Hibernate auto-creates and updates the tables on startup (`spring.jpa.hibernate.ddl-auto=update`).
 
-1. Create a project at https://supabase.com (free tier).
-2. In **Project Settings → Database**, copy the connection info:
-   - Host: `db.<project-ref>.supabase.co`, port `5432`, database `postgres`, user `postgres`
-   - **DB_URL** = `jdbc:postgresql://db.<project-ref>.supabase.co:5432/postgres?sslmode=require`
-3. In **Storage**, create a bucket named `payments` and turn **Public bucket** ON.
-4. In **Project Settings → API**, copy the **Project URL** and the **`service_role` secret**.
+### 2. Payment Screenshot Storage in MySQL
+Payment screenshots uploaded during registration are stored **directly in the MySQL database** in the `registrations` table:
+- Column `payment_image_bytes`: `LONGBLOB` (supports images up to 10MB)
+- Column `payment_image_type`: `VARCHAR(64)` (e.g., `image/png`, `image/jpeg`)
+- Column `payment_image_path`: Set to `/register/payment-image/{groupId}`
 
-The app creates its tables automatically on first start (`spring.jpa.hibernate.ddl-auto=update`).
+> [!TIP]
+> Because images are stored in MySQL, **container restarts and redeployments on Railway will NEVER delete or lose uploaded payment proofs**.
 
-### 2. GitHub
+### 3. Environment Variables on Railway
 
-Push this repository to GitHub (it already has `origin` configured):
+Set these in your Railway web service **Variables** tab:
 
-    git push origin main
+| Key | Value / Description | Default / Source |
+|---|---|---|
+| `MYSQL_URL` | `jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}` | Auto-provided by Railway MySQL |
+| `MYSQLUSER` | `${{MySQL.MYSQLUSER}}` | Auto-provided by Railway MySQL |
+| `MYSQLPASSWORD` | `${{MySQL.MYSQLPASSWORD}}` | Auto-provided by Railway MySQL |
+| `ADMIN_USERNAME` | Admin login username | 
+| `ADMIN_PASSWORD` | Admin login password | `Toinfinityandbeyond` |
+| `PORT` | Web server port | Auto-bound by Railway (8080) |
 
-### 3. Render — free web service
+---
 
-1. https://dashboard.render.com → **New → Web Service** → connect the GitHub repo.
-2. Render detects `render.yaml` (build `mvn -DskipTests clean package`, start
-   `java -jar target/odyssey-1.0.0.jar`, free plan, Java 17).
-3. Under **Environment**, set:
+## Local Development
 
-   | Key | Value |
-   |---|---|
-   | `DB_URL` | `jdbc:postgresql://db.<ref>.supabase.co:5432/postgres?sslmode=require` |
-   | `DB_USERNAME` | `postgres` |
-   | `DB_PASSWORD` | your Supabase database password |
-   | `SUPABASE_URL` | `https://<project-ref>.supabase.co` |
-   | `SUPABASE_SERVICE_ROLE_KEY` | the `service_role` secret |
-   | `SUPABASE_BUCKET` | `payments` |
-   | `ADMIN_USERNAME` | admin login username |
-   | `ADMIN_PASSWORD` | admin login password (choose a strong one) |
+### Prerequisites
+- **Java 17+** (JDK 17 LTS recommended)
+- **Maven 3.8+**
+- **MySQL 8.0+** (or connect directly to your Railway MySQL instance)
 
-4. Deploy. Your site will be live at `https://odyssey-xxxx.onrender.com`.
+### Run Locally
+```bash
+mvn spring-boot:run
+```
+Then open `http://localhost:8080` in your web browser.
 
-Notes:
-- Render free services **sleep** after ~15 min idle; the first request after idle
-  takes ~30 s. Subsequent requests are fast.
-- The Render disk is **ephemeral** — that is why payment screenshots go to
-  Supabase Storage (permanent URLs). Local `uploads/` is only a fallback.
-- Remember to **delete the old AWS RDS instance** (it bills hourly) and rotate the
-  database password that was previously committed to git.
+---
 
-## Structure
+## Web Endpoints
 
-- `HomeController.java` holds the event name, tagline and the four stages
-- `Registration.java` is the JPA entity mapped to the `registrations` database table
-- `RegistrationRepository.java` is the Spring Data JPA repository
-- `RegistrationService.java` manages database persistence and queries
-- `RegistrationController.java` handles `/register`, `/register/pass/{id}`, `/admin/registrations`, and `/api/registrations`
-- `SupabaseStorageService.java` uploads payment screenshots to Supabase Storage
-- `templates/index.html` is the home page
-- `templates/register.html` is the Odyssey registration page
-- `templates/pass.html` is the digital holographic boarding pass ticket
-- `templates/admin.html` is the database manifest dashboard
-- `static/css/style.css` is the base ocean theme
-- `static/css/register.css` contains registration form and boarding pass styles
-- `static/js/main.js` is the scroll reveal animation
-- `static/js/register.js` manages track selection, team size dynamic fields, and form interaction
-- `render.yaml` is the Render deployment blueprint
+### Public Web Portal
+- **Home Portal:** `http://localhost:8080/`
+- **Registration Form:** `http://localhost:8080/register`
+- **Boarding Pass Ticket:** `http://localhost:8080/register/pass/{id}`
+- **Find Lost Ticket:** `http://localhost:8080/find-ticket`
+- **Event Schedule & Timeline:** `http://localhost:8080/calendar`
+- **Knowledge Base & FAQ:** `http://localhost:8080/faq`
+- **Student Voice & Feedback:** `http://localhost:8080/student-response`
 
-## Database & Endpoints
+### Administrative Portal (Protected by Session Auth)
+- **Admin Login:** `http://localhost:8080/admin/login`
+- **Admin Registrations Manifest:** `http://localhost:8080/admin/registrations`
+- **Admin Feedback Moderation:** `http://localhost:8080/admin/responses`
+- **Registrations CSV Export:** `http://localhost:8080/admin/export/csv`
+- **Feedback CSV Export:** `http://localhost:8080/admin/responses/export/csv`
+- **Payment Image Stream:** `http://localhost:8080/register/payment-image/{id}`
 
-- **Web Portal**: http://localhost:8080/
-- **Registration Form**: http://localhost:8080/register
-- **Database Manifest Dashboard**: http://localhost:8080/admin/registrations
-- **JSON API**: http://localhost:8080/api/registrations
-- **Database Engine**: PostgreSQL (Supabase free tier)
-- **File Storage**: Supabase Storage (bucket `payments`)
+### REST APIs
+- `GET /api/check-team-name?name={name}`: Live team name availability check
+- `GET /api/registrations`: JSON list of all registrations (Admin session required)
+- `GET /api/dept-counts`: JSON department participant aggregations (Admin session required)
+- `POST /api/admin/registrations/delete?id={id}`: API endpoint for record deletion
 
-All secrets are provided via environment variables — never commit credentials.
-# Odyssey
+---
+
+## Architecture & Code Structure
+
+```
+src/main/java/com/ecell/odyssey/
+├── OdysseyApplication.java          # Spring Boot Application entrypoint
+├── HomeController.java              # Routes: /, /calendar
+├── Registration.java                # JPA Entity for `registrations` (includes LONGBLOB image bytes)
+├── RegistrationRepository.java      # Spring Data JPA queries
+├── RegistrationService.java         # Business logic: team decomposition, validation, deletion
+├── RegistrationController.java      # Routes: /register, /pass, /find-ticket, /admin, image streaming
+├── StudentResponse.java             # JPA Entity for `student_responses`
+├── StudentResponseRepository.java  # Feedback repository queries
+├── StudentResponseController.java  # Routes: /student-response, /admin/responses, CSV export
+├── WebConfig.java                   # Resource handlers & view controllers
+└── SupabaseStorageService.java      # Optional cloud storage service (fallback to MySQL)
+
+src/main/resources/
+├── application.properties           # App & database configuration (MySQL, HikariCP, Sessions)
+├── static/
+│   ├── css/                         # Ocean Cyberpunk design tokens & stylesheets
+│   └── js/                          # Interactive client validation & UI scripts
+└── templates/                       # Thymeleaf server-rendered HTML templates
+```
+
+---
+
+## Specifications
+
+Detailed IEEE 830 compliant software requirements are documented in **[SRS.md](file:///d:/subbu/kits/E-Cell/ecell-site/kits-ecell/odyssey/SRS.md)**.

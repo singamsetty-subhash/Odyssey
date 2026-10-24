@@ -11,4 +11,5 @@ public interface RegistrationRepository extends JpaRepository<Registration, Stri
     List<Registration> findAllByOrderByRegisteredAtDesc();
     long countByTrack(String track);
     boolean existsByTeamNameIgnoreCase(String teamName);
+    Optional<Registration> findFirstByPaymentImagePathContaining(String filename);
 }

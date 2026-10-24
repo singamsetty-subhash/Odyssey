@@ -68,6 +68,13 @@ public class Registration {
     @Column(length = 512)
     private String paymentImagePath;
 
+    @jakarta.persistence.Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] paymentImageBytes;
+
+    @Column(length = 64)
+    private String paymentImageType;
+
     // Team Size
     @Column(nullable = false)
     private int teamSize;
@@ -331,6 +338,12 @@ public class Registration {
 
     public String getPaymentImagePath() { return paymentImagePath; }
     public void setPaymentImagePath(String paymentImagePath) { this.paymentImagePath = paymentImagePath; }
+
+    public byte[] getPaymentImageBytes() { return paymentImageBytes; }
+    public void setPaymentImageBytes(byte[] paymentImageBytes) { this.paymentImageBytes = paymentImageBytes; }
+
+    public String getPaymentImageType() { return paymentImageType; }
+    public void setPaymentImageType(String paymentImageType) { this.paymentImageType = paymentImageType; }
 
     public int getTeamSize() { return teamSize; }
     public void setTeamSize(int teamSize) { this.teamSize = teamSize; }
