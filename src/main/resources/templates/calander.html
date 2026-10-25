@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'Calendar &amp; Schedule | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
+    <title
+        th:text="'Calendar &amp; Schedule | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
         Calendar &amp; Schedule | Odyssey: Beyond the Horizon
     </title>
     <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
@@ -22,9 +23,11 @@
     <!-- Navbar -->
     <nav class="nav">
         <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
-            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo" class="nav-logo-img">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo"
+                class="nav-logo-img">
         </a>
-        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"
+            aria-controls="navMenu">
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
@@ -33,9 +36,10 @@
             <li><a th:href="@{/}" href="/">Home</a></li>
             <li><a th:href="@{/#about}" href="/#about">About</a></li>
             <li><a th:href="@{/#stages}" href="/#stages">Stages</a></li>
-            <li><a th:href="@{/calendar}" href="/calendar" style="color: var(--aqua); font-weight: 700;">Calendar</a></li>
+            <li><a th:href="@{/calendar}" href="/calendar" style="color: var(--aqua); font-weight: 700;">Calendar</a>
+            </li>
             <li><a th:href="@{/faq}" href="/faq">FAQ</a></li>
-            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find Ticket</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find my pass</a></li>
             <li><a th:href="@{/student-response}" href="/student-response">Feedback</a></li>
             <li><a th:href="@{/register}" href="/register" class="nav-reg-btn">Register</a></li>
         </ul>
@@ -50,7 +54,8 @@
         <!-- Header -->
         <header class="cal-header">
             <div class="cal-badge">
-                <span>&#9875; Official Odyssey Manifest &middot; October 29 &amp; 30, 2026 &middot; CV Raman Hall, KITS</span>
+                <span>&#9875; Official Odyssey Manifest &middot; October 29 &amp; 30, 2026 &middot; CV Raman Hall,
+                    KITS</span>
             </div>
             <h1>Odyssey Calendar &amp; Master Schedule</h1>
             <p>
@@ -77,8 +82,10 @@
                     <div class="countdown-label">Seconds</div>
                 </div>
             </div>
-            <div style="margin-top: 0.85rem; font-size: 0.85rem; color: var(--aqua); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
-                &#9201; Countdown to Odyssey Kickoff &middot; October 29, 2026 @ 10:00 AM IST (Andhra Pradesh / UTC+05:30)
+            <div
+                style="margin-top: 0.85rem; font-size: 0.85rem; color: var(--aqua); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
+                &#9201; Countdown to Odyssey Kickoff &middot; October 29, 2026 @ 10:00 AM IST (Andhra Pradesh /
+                UTC+05:30)
             </div>
 
             <!-- Live Andhra Pradesh Timezone Clock -->
@@ -107,7 +114,8 @@
 
         <!-- Live Search and Filter Bar -->
         <div class="search-filter-wrap">
-            <input type="text" id="calSearchInput" class="cal-search-input" placeholder="&#128269; Search rounds, topics, breaks (e.g. Customer, Crisis, Pitch)...">
+            <input type="text" id="calSearchInput" class="cal-search-input"
+                placeholder="&#128269; Search rounds, topics, breaks (e.g. Customer, Crisis, Pitch)...">
 
             <div class="category-pills">
                 <button type="button" class="category-pill active" data-category="all">All Events</button>
@@ -125,8 +133,10 @@
                 <div class="month-nav-header">
                     <h2 class="month-title" id="calendarMonthTitle">October 2026</h2>
                     <div class="month-arrows">
-                        <button type="button" class="arrow-btn" id="prevMonthBtn" aria-label="Previous Month">&larr;</button>
-                        <button type="button" class="arrow-btn" id="nextMonthBtn" aria-label="Next Month">&rarr;</button>
+                        <button type="button" class="arrow-btn" id="prevMonthBtn"
+                            aria-label="Previous Month">&larr;</button>
+                        <button type="button" class="arrow-btn" id="nextMonthBtn"
+                            aria-label="Next Month">&rarr;</button>
                     </div>
                 </div>
 
@@ -187,7 +197,8 @@
                                 <span style="font-size: 0.75rem; color: var(--muted);">Stage 1: The Departure</span>
                             </div>
                             <h3 class="agenda-title">Round 1: Launch &amp; Orientation</h3>
-                            <p class="agenda-desc">Official Odyssey kickoff, welcome address by KITS E-Cell leadership, event rules briefing, and team manifest verification.</p>
+                            <p class="agenda-desc">Official Odyssey kickoff, welcome address by KITS E-Cell leadership,
+                                event rules briefing, and team manifest verification.</p>
                         </div>
                     </article>
 
@@ -203,7 +214,8 @@
                                 <span style="font-size: 0.75rem; color: var(--muted);">Problem Discovery</span>
                             </div>
                             <h3 class="agenda-title">Round 2: Problem Drop</h3>
-                            <p class="agenda-desc">Sealed real-world industry problem statements are unveiled to each team. Crews brainstorm core pain points and establish their initial hypothesis.</p>
+                            <p class="agenda-desc">Sealed real-world industry problem statements are unveiled to each
+                                team. Crews brainstorm core pain points and establish their initial hypothesis.</p>
                         </div>
                     </article>
 
@@ -219,7 +231,8 @@
                                 <span style="font-size: 0.75rem; color: var(--muted);">Customer Discovery</span>
                             </div>
                             <h3 class="agenda-title">Round 3: Customer Hunt</h3>
-                            <p class="agenda-desc">Field validation round. Gather verified customer-review slips from designated coordinators and simulated end-users to test value proposition viability.</p>
+                            <p class="agenda-desc">Field validation round. Gather verified customer-review slips from
+                                designated coordinators and simulated end-users to test value proposition viability.</p>
                         </div>
                     </article>
 
@@ -235,7 +248,8 @@
                                 <span style="font-size: 0.75rem; color: var(--muted);">Stage 2: Into the Unknown</span>
                             </div>
                             <h3 class="agenda-title">Round 4: Solution Lab &amp; MVP Blueprint</h3>
-                            <p class="agenda-desc">Define customer segments, draft the lean canvas, design product wireframes or architecture, and finalize the Minimum Viable Product (MVP) scope.</p>
+                            <p class="agenda-desc">Define customer segments, draft the lean canvas, design product
+                                wireframes or architecture, and finalize the Minimum Viable Product (MVP) scope.</p>
                         </div>
                     </article>
 
@@ -250,7 +264,8 @@
                                 <span class="agenda-tag break">Networking Break</span>
                             </div>
                             <h3 class="agenda-title">&#127857; Lunch &amp; Peer Networking</h3>
-                            <p class="agenda-desc">Recharge, exchange perspectives across student ventures, and collaborate with visiting mentors.</p>
+                            <p class="agenda-desc">Recharge, exchange perspectives across student ventures, and
+                                collaborate with visiting mentors.</p>
                         </div>
                     </article>
 
@@ -266,7 +281,9 @@
                                 <span style="font-size: 0.75rem; color: var(--muted);">The Pivot Test</span>
                             </div>
                             <h3 class="agenda-title">Round 5: Strategic Condition Challenge</h3>
-                            <p class="agenda-desc">Surprise twist: Each crew receives an unforeseen market regulation, supply disruption, or budget cut. Teams must pivot their operational strategy within 60 minutes.</p>
+                            <p class="agenda-desc">Surprise twist: Each crew receives an unforeseen market regulation,
+                                supply disruption, or budget cut. Teams must pivot their operational strategy within 60
+                                minutes.</p>
                         </div>
                     </article>
 
@@ -279,10 +296,12 @@
                         <div class="agenda-content-col">
                             <div class="agenda-meta-row">
                                 <span class="agenda-tag round">Round 6</span>
-                                <span style="font-size: 0.75rem; color: var(--muted);">Stage 3: The Trial of Tides</span>
+                                <span style="font-size: 0.75rem; color: var(--muted);">Stage 3: The Trial of
+                                    Tides</span>
                             </div>
                             <h3 class="agenda-title">Round 6: Prototype Sprint &amp; Deck Preparation</h3>
-                            <p class="agenda-desc">Final build sprint of Day 1. Finalize working prototypes, pitch decks, financial estimations, and submit Day 1 checkpoint deliverables.</p>
+                            <p class="agenda-desc">Final build sprint of Day 1. Finalize working prototypes, pitch
+                                decks, financial estimations, and submit Day 1 checkpoint deliverables.</p>
                         </div>
                     </article>
                 </div>
@@ -303,7 +322,9 @@
                                 <span style="font-size: 0.75rem; color: #ef4444;">High Stakes</span>
                             </div>
                             <h3 class="agenda-title">Round 7: Crisis Envelope / Market Shock</h3>
-                            <p class="agenda-desc">Real-time simulation of market crashes, competitor aggression, or severe PR emergencies. Crews present emergency mitigation steps under intense pressure.</p>
+                            <p class="agenda-desc">Real-time simulation of market crashes, competitor aggression, or
+                                severe PR emergencies. Crews present emergency mitigation steps under intense pressure.
+                            </p>
                         </div>
                     </article>
 
@@ -318,7 +339,8 @@
                                 <span class="agenda-tag round">Pre-Pitch Prep</span>
                             </div>
                             <h3 class="agenda-title">Deck Finalization &amp; File Verification</h3>
-                            <p class="agenda-desc">Rehearse presentations, polish audio-visual assets, and officially lock presentation files with the technical desk.</p>
+                            <p class="agenda-desc">Rehearse presentations, polish audio-visual assets, and officially
+                                lock presentation files with the technical desk.</p>
                         </div>
                     </article>
 
@@ -333,7 +355,8 @@
                                 <span class="agenda-tag break">Networking Break</span>
                             </div>
                             <h3 class="agenda-title">&#127857; Lunch &amp; Mentor Office Hours</h3>
-                            <p class="agenda-desc">Final strategy alignment and feedback session with industry jury members.</p>
+                            <p class="agenda-desc">Final strategy alignment and feedback session with industry jury
+                                members.</p>
                         </div>
                     </article>
 
@@ -349,7 +372,8 @@
                                 <span style="font-size: 0.75rem; color: var(--purple-light);">Peer Showcase</span>
                             </div>
                             <h3 class="agenda-title">Round 8: Team Presentations &amp; Cross-Evaluation</h3>
-                            <p class="agenda-desc">Teams deliver rapid 5-minute pitches followed by audience Q&amp;A and cross-team valuation feedback.</p>
+                            <p class="agenda-desc">Teams deliver rapid 5-minute pitches followed by audience Q&amp;A and
+                                cross-team valuation feedback.</p>
                         </div>
                     </article>
 
@@ -365,23 +389,32 @@
                                 <span style="font-size: 0.75rem; color: var(--gold-light);">Investor Arena</span>
                             </div>
                             <h3 class="agenda-title">Round 9: The Investor Pitch</h3>
-                            <p class="agenda-desc">Top ventures pitch directly to venture capitalists, startup incubators, and industry leaders to secure virtual seed investments and prize allocation.</p>
+                            <p class="agenda-desc">Top ventures pitch directly to venture capitalists, startup
+                                incubators, and industry leaders to secure virtual seed investments and prize
+                                allocation.</p>
                         </div>
                     </article>
 
                     <!-- Grand Finale -->
                     <article class="agenda-card finale-item" data-category="keynote">
                         <div class="agenda-time-col">
-                            <span class="agenda-time-badge" style="color: var(--gold); border-color: rgba(250, 204, 21, 0.5);">&#127942; 4:30 – 5:00 PM IST</span>
-                            <div class="agenda-venue" style="color: var(--gold-light);">&#128205; Grand Stage &middot; KITS Guntur (AP)</div>
+                            <span class="agenda-time-badge"
+                                style="color: var(--gold); border-color: rgba(250, 204, 21, 0.5);">&#127942; 4:30 – 5:00
+                                PM IST</span>
+                            <div class="agenda-venue" style="color: var(--gold-light);">&#128205; Grand Stage &middot;
+                                KITS Guntur (AP)</div>
                         </div>
                         <div class="agenda-content-col">
                             <div class="agenda-meta-row">
-                                <span class="agenda-tag break" style="background: rgba(250, 204, 21, 0.2); color: var(--gold);">Grand Finale</span>
+                                <span class="agenda-tag break"
+                                    style="background: rgba(250, 204, 21, 0.2); color: var(--gold);">Grand Finale</span>
                                 <span style="font-size: 0.75rem; color: #ffffff;">Stage 4: Beyond the Horizon</span>
                             </div>
-                            <h3 class="agenda-title" style="color: var(--gold-light);">&#127942; Awards, Incubation Offers &amp; Closing Ceremony</h3>
-                            <p class="agenda-desc" style="color: #ffffff;">Score consolidation, announcement of Champions, Runner-ups, Best MVP, and presentation of Odyssey trophies and incubation support.</p>
+                            <h3 class="agenda-title" style="color: var(--gold-light);">&#127942; Awards, Incubation
+                                Offers &amp; Closing Ceremony</h3>
+                            <p class="agenda-desc" style="color: #ffffff;">Score consolidation, announcement of
+                                Champions, Runner-ups, Best MVP, and presentation of Odyssey trophies and incubation
+                                support.</p>
                         </div>
                     </article>
                 </div>
@@ -401,7 +434,8 @@
                     <div class="milestone-box">
                         <div class="milestone-date-tag">Phase 1 &middot; Registrations Active</div>
                         <h3>Official Crew Enrollment</h3>
-                        <p>Registration portal opens at &#8377;100 per person (groups of 3 to 5 participants). Instant issuance of Digital Odyssey Boarding Passes with live UPI payment verification.</p>
+                        <p>Registration portal opens at &#8377;100 per person (groups of 3 to 5 participants). Instant
+                            issuance of Digital Odyssey Boarding Passes with live UPI payment verification.</p>
                     </div>
                 </div>
 
@@ -409,9 +443,11 @@
                 <div class="milestone-node">
                     <div class="milestone-dot purple">&#9679;</div>
                     <div class="milestone-box">
-                        <div class="milestone-date-tag" style="color: var(--purple-light);">Phase 2 &middot; Pre-Odyssey Briefing</div>
+                        <div class="milestone-date-tag" style="color: var(--purple-light);">Phase 2 &middot; Pre-Odyssey
+                            Briefing</div>
                         <h3>Team Strategy &amp; Rules Orientation</h3>
-                        <p>Virtual briefing session covering evaluation criteria, team roles (Hacker, Hustler, Designer), problem domain distribution, and event guidelines.</p>
+                        <p>Virtual briefing session covering evaluation criteria, team roles (Hacker, Hustler,
+                            Designer), problem domain distribution, and event guidelines.</p>
                     </div>
                 </div>
 
@@ -419,9 +455,11 @@
                 <div class="milestone-node">
                     <div class="milestone-dot gold">&#9679;</div>
                     <div class="milestone-box">
-                        <div class="milestone-date-tag" style="color: var(--gold);">Phase 3 &middot; Oct 29, 2026 (Day 1)</div>
+                        <div class="milestone-date-tag" style="color: var(--gold);">Phase 3 &middot; Oct 29, 2026 (Day
+                            1)</div>
                         <h3>Launch, Problem Drops &amp; Market Validation</h3>
-                        <p>Rounds 1 to 6 unfold live on campus. Customer hunting, lean canvas drafting, and the unexpected Strategic Condition Challenge.</p>
+                        <p>Rounds 1 to 6 unfold live on campus. Customer hunting, lean canvas drafting, and the
+                            unexpected Strategic Condition Challenge.</p>
                     </div>
                 </div>
 
@@ -429,9 +467,11 @@
                 <div class="milestone-node">
                     <div class="milestone-dot gold">&#9679;</div>
                     <div class="milestone-box">
-                        <div class="milestone-date-tag" style="color: var(--gold);">Phase 4 &middot; Oct 30, 2026 (Day 2)</div>
+                        <div class="milestone-date-tag" style="color: var(--gold);">Phase 4 &middot; Oct 30, 2026 (Day
+                            2)</div>
                         <h3>Crisis Simulation &amp; Investor Arena</h3>
-                        <p>Market shock envelopes, peer presentations, and the final high-stakes Investor Pitch before the closing Awards Gala.</p>
+                        <p>Market shock envelopes, peer presentations, and the final high-stakes Investor Pitch before
+                            the closing Awards Gala.</p>
                     </div>
                 </div>
             </div>
@@ -440,7 +480,8 @@
         <!-- CTA Section -->
         <section class="cal-cta-section">
             <h2>Ready to Embark on Your Entrepreneurial Odyssey?</h2>
-            <p>Assemble your team of 3 to 5 members, register before the manifest closes, and receive your official Odyssey Boarding Pass.</p>
+            <p>Assemble your team of 3 to 5 members, register before the manifest closes, and receive your official
+                Odyssey Boarding Pass.</p>
             <a th:href="@{/register}" href="/register" class="cal-register-btn">
                 <span>&#9875;</span> Enlist Your Crew Now
             </a>
@@ -449,11 +490,15 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2026 <span th:text="${eventName != null ? eventName : 'Odyssey'}">Odyssey</span> &middot; Designed and Developed by <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+        <p>&copy; 2026 <span th:text="${eventName != null ? eventName : 'Odyssey'}">Odyssey</span> &middot; Designed and
+            Developed by <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS
+                Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank"
+                rel="noopener noreferrer">kitsecellgnt.com</a></p>
     </footer>
 
     <!-- Scripts -->
     <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
     <script th:src="@{/js/calendar.js(v=6)}" src="/js/calendar.js?v=6"></script>
 </body>
+
 </html>

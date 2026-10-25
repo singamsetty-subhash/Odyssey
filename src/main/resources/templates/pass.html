@@ -20,9 +20,11 @@
 
     <nav class="nav">
         <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
-            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo" class="nav-logo-img">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo"
+                class="nav-logo-img">
         </a>
-        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"
+            aria-controls="navMenu">
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
@@ -32,7 +34,7 @@
             <li><a th:href="@{/#about}" href="/#about">About</a></li>
             <li><a th:href="@{/#stages}" href="/#stages">Stages</a></li>
             <li><a th:href="@{/calendar}" href="/calendar">Calendar</a></li>
-            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find Ticket</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket">Find My Pass</a></li>
             <li><a th:href="@{/faq}" href="/faq">FAQ</a></li>
             <li><a th:href="@{/register}" href="/register">Register</a></li>
         </ul>
@@ -46,11 +48,15 @@
         <!-- Verified Success Banner -->
         <div th:if="${param.verified != null or verified == true}" class="pass-verified-notice"
             style="background: rgba(46, 204, 113, 0.16); border: 1.5px solid rgba(46, 204, 113, 0.6); color: #86efac; border-radius: 16px; padding: 1.1rem 1.6rem; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2);">
-            <div style="font-size: 1.6rem; background: rgba(46, 204, 113, 0.2); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&#9989;</div>
+            <div
+                style="font-size: 1.6rem; background: rgba(46, 204, 113, 0.2); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                &#9989;</div>
             <div>
-                <h3 style="margin: 0 0 0.25rem 0; font-size: 1.05rem; color: #4ade80; font-weight: 700;">Credentials Verified Successfully!</h3>
+                <h3 style="margin: 0 0 0.25rem 0; font-size: 1.05rem; color: #4ade80; font-weight: 700;">Credentials
+                    Verified Successfully!</h3>
                 <p style="margin: 0; font-size: 0.9rem; color: #dcfce7; line-height: 1.4;">
-                    Your Team Name, Leader Name, Email, and UTR have been authenticated with the Odyssey Database. Here is your official Boarding Pass.
+                    Your Team Name, Leader Name, Email, and UTR have been authenticated with the Odyssey Database. Here
+                    is your official Boarding Pass.
                 </p>
             </div>
         </div>
@@ -80,28 +86,41 @@
                 <div class="cal-reminder-text">
                     <h3>Save Odyssey Schedule to Google Calendar</h3>
                     <p>
-                        Automatic reminder for <strong>October 29 &amp; 30, 2026</strong> at <strong>CV Raman Hall, KKR &amp; KSR Institute of Technology and Sciences (KITS)</strong>. All <strong th:text="${registration.teamSize}">3</strong> registered group members have been pre-filled as attendees to automatically receive calendar reminders on their devices:
+                        Automatic reminder for <strong>October 29 &amp; 30, 2026</strong> at <strong>CV Raman Hall, KKR
+                            &amp; KSR Institute of Technology and Sciences (KITS)</strong>. All <strong
+                            th:text="${registration.teamSize}">3</strong> registered group members have been pre-filled
+                        as attendees to automatically receive calendar reminders on their devices:
                     </p>
                     <div class="cal-attendees-chips">
                         <span class="cal-chip lead-chip">
-                            👑 <strong th:text="${registration.leaderName}">Rahul</strong> (<span th:text="${registration.leaderEmail}">email</span>)
+                            👑 <strong th:text="${registration.leaderName}">Rahul</strong> (<span
+                                th:text="${registration.leaderEmail}">email</span>)
                         </span>
-                        <span class="cal-chip" th:if="${registration.member2Email != null and !registration.member2Email.isBlank()}">
-                            👤 <strong th:text="${registration.member2Name}">Member 2</strong> (<span th:text="${registration.member2Email}">email</span>)
+                        <span class="cal-chip"
+                            th:if="${registration.member2Email != null and !registration.member2Email.isBlank()}">
+                            👤 <strong th:text="${registration.member2Name}">Member 2</strong> (<span
+                                th:text="${registration.member2Email}">email</span>)
                         </span>
-                        <span class="cal-chip" th:if="${registration.member3Email != null and !registration.member3Email.isBlank()}">
-                            👤 <strong th:text="${registration.member3Name}">Member 3</strong> (<span th:text="${registration.member3Email}">email</span>)
+                        <span class="cal-chip"
+                            th:if="${registration.member3Email != null and !registration.member3Email.isBlank()}">
+                            👤 <strong th:text="${registration.member3Name}">Member 3</strong> (<span
+                                th:text="${registration.member3Email}">email</span>)
                         </span>
-                        <span class="cal-chip" th:if="${registration.member4Email != null and !registration.member4Email.isBlank() and registration.teamSize >= 4}">
-                            👤 <strong th:text="${registration.member4Name}">Member 4</strong> (<span th:text="${registration.member4Email}">email</span>)
+                        <span class="cal-chip"
+                            th:if="${registration.member4Email != null and !registration.member4Email.isBlank() and registration.teamSize >= 4}">
+                            👤 <strong th:text="${registration.member4Name}">Member 4</strong> (<span
+                                th:text="${registration.member4Email}">email</span>)
                         </span>
-                        <span class="cal-chip" th:if="${registration.member5Email != null and !registration.member5Email.isBlank() and registration.teamSize >= 5}">
-                            👤 <strong th:text="${registration.member5Name}">Member 5</strong> (<span th:text="${registration.member5Email}">email</span>)
+                        <span class="cal-chip"
+                            th:if="${registration.member5Email != null and !registration.member5Email.isBlank() and registration.teamSize >= 5}">
+                            👤 <strong th:text="${registration.member5Name}">Member 5</strong> (<span
+                                th:text="${registration.member5Email}">email</span>)
                         </span>
                     </div>
                 </div>
                 <div class="cal-reminder-action">
-                    <a th:href="${registration.googleCalendarUrl}" target="_blank" rel="noopener noreferrer" class="btn-google-cal" id="btnSaveGoogleCal">
+                    <a th:href="${registration.googleCalendarUrl}" target="_blank" rel="noopener noreferrer"
+                        class="btn-google-cal" id="btnSaveGoogleCal">
                         <span>&#128197;</span> Save in Google Calendar
                     </a>
                     <span class="cal-hint-sub">&#10003; Notifies all group members</span>
@@ -115,7 +134,9 @@
             <div class="pass-main">
                 <header class="pass-header">
                     <div style="display: flex; align-items: center; gap: 0.85rem;">
-                        <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="Odyssey Logo" style="height: 38px; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px rgba(25, 211, 230, 0.4));">
+                        <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png"
+                            alt="Odyssey Logo"
+                            style="height: 38px; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px rgba(25, 211, 230, 0.4));">
                         <div>
                             <span class="pass-brand" th:text="${eventName}">Odyssey</span>
                             <div
@@ -149,7 +170,8 @@
                         <div class="pass-venue-info">
                             <span class="pass-venue-tag">Official Venue</span>
                             <div class="pass-venue-title">CV Raman Hall</div>
-                            <p class="pass-venue-sub">KKR &amp; KSR Institute of Technology and Sciences (KITS), Guntur</p>
+                            <p class="pass-venue-sub">KKR &amp; KSR Institute of Technology and Sciences (KITS), Guntur
+                            </p>
                         </div>
                     </div>
                     <div class="pass-venue-divider" aria-hidden="true"></div>
@@ -166,7 +188,8 @@
                 <div class="pass-grid">
                     <div>
                         <div class="pass-field-label">Team Name</div>
-                        <div class="pass-field-val" style="color: var(--aqua); font-weight: 700;" th:text="${registration.teamName}">CyberKnights</div>
+                        <div class="pass-field-val" style="color: var(--aqua); font-weight: 700;"
+                            th:text="${registration.teamName}">CyberKnights</div>
                     </div>
                     <div>
                         <div class="pass-field-label">Lead Person</div>
@@ -180,14 +203,17 @@
                     <div>
                         <div class="pass-field-label">Dept, Year &amp; Sec</div>
                         <div class="pass-field-val">
-                            <span th:text="${registration.dept} + ' &middot; ' + ${registration.year}">CSE &middot; 3rd Year</span>
-                            <span style="color: var(--aqua); font-size: 0.82rem; font-weight: 600; margin-left: 0.35rem;" th:text="'(Sec ' + ${registration.section} + ')'">(Sec 1)</span>
+                            <span th:text="${registration.dept} + ' &middot; ' + ${registration.year}">CSE &middot; 3rd
+                                Year</span>
+                            <span
+                                style="color: var(--aqua); font-size: 0.82rem; font-weight: 600; margin-left: 0.35rem;"
+                                th:text="'(Sec ' + ${registration.section} + ')'">(Sec 1)</span>
                         </div>
                     </div>
                     <div>
                         <div class="pass-field-label">Email &amp; Phone</div>
                         <div class="pass-field-val" style="font-size: 0.85rem;">
-                            <span th:text="${registration.leaderEmail}">rahul@example.com</span><br>
+                            <span th:text="${registration.leaderEmail}">Kits@example.com</span><br>
                             <span style="color: var(--muted);" th:text="${registration.leaderPhone}">+91
                                 9876543210</span>
                         </div>
@@ -206,17 +232,21 @@
                     <div>
                         <div class="pass-field-label">Official Venue</div>
                         <div class="pass-field-val" style="color: var(--aqua);">CV Raman Hall</div>
-                        <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem;">KITS Guntur (AP)</div>
+                        <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem;">KITS Guntur (AP)
+                        </div>
                     </div>
                     <div>
                         <div class="pass-field-label">Institution</div>
-                        <div class="pass-field-val" style="font-size: 0.88rem;">KKR &amp; KSR Institute of Tech &amp; Sciences</div>
-                        <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem;">Vinjanampadu, Guntur</div>
+                        <div class="pass-field-val" style="font-size: 0.88rem;">KKR &amp; KSR Institute of Tech &amp;
+                            Sciences</div>
+                        <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem;">Vinjanampadu, Guntur
+                        </div>
                     </div>
                     <div>
                         <div class="pass-field-label">Event Schedule</div>
                         <div class="pass-field-val" style="color: var(--foam);">Oct 29 &amp; 30, 2026</div>
-                        <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem;">10:00 AM – 5:00 PM IST</div>
+                        <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem;">10:00 AM – 5:00 PM
+                            IST</div>
                     </div>
                 </div>
 
@@ -277,7 +307,8 @@
                 <div class="stub-code">
                     <div class="stub-id-label">Odyssey ID</div>
                     <div class="stub-id" th:text="${registration.id}">ODY-9281</div>
-                    <div style="font-size: 0.82rem; font-weight: 700; color: var(--aqua); margin: 0.25rem 0 0.1rem;" th:text="${registration.teamName}">CyberKnights</div>
+                    <div style="font-size: 0.82rem; font-weight: 700; color: var(--aqua); margin: 0.25rem 0 0.1rem;"
+                        th:text="${registration.teamName}">CyberKnights</div>
                     <div class="stub-status">&#10003; Payment Submitted</div>
                 </div>
 
@@ -312,7 +343,8 @@
 
                 <div>
                     <p class="stub-note">
-                        Save this digital ticket or snapshot. Present your Roll Number &amp; Odyssey ID at CV Raman Hall registration desk.
+                        Save this digital ticket or snapshot. Present your Roll Number &amp; Odyssey ID at CV Raman Hall
+                        registration desk.
                     </p>
                 </div>
             </div>
@@ -320,8 +352,8 @@
 
         <!-- Actions -->
         <div class="pass-actions">
-            <a th:href="${registration.googleCalendarUrl}" target="_blank" rel="noopener noreferrer" class="btn-google-cal"
-                style="box-shadow: 0 4px 20px rgba(14, 165, 233, 0.45);">
+            <a th:href="${registration.googleCalendarUrl}" target="_blank" rel="noopener noreferrer"
+                class="btn-google-cal" style="box-shadow: 0 4px 20px rgba(14, 165, 233, 0.45);">
                 <span>&#128197; Save in Google Calendar (All Members)</span>
             </a>
             <a href="https://chat.whatsapp.com/LTBBY7HvMAJF1hROCei2J0?s=sw&p=a&mlu=4&ilr=4" target="_blank"
@@ -343,7 +375,7 @@
 
     <!-- Auto-Sync Reminder Modal -->
     <div class="cal-modal-overlay" id="calAutoModal" role="dialog" aria-modal="true" aria-labelledby="calModalTitle"
-         th:attr="data-auto-cal=${autoCal}, data-cal-url=${registration.googleCalendarUrl}, data-pass-id=${registration.id}">
+        th:attr="data-auto-cal=${autoCal}, data-cal-url=${registration.googleCalendarUrl}, data-pass-id=${registration.id}">
         <div class="cal-modal-card">
             <div class="cal-modal-icon">&#128197;</div>
             <div class="cal-reminder-badge" style="margin-bottom: 0.5rem;">
@@ -352,13 +384,18 @@
             </div>
             <h2 class="cal-modal-title" id="calModalTitle">Save Reminders to Google Calendar?</h2>
             <p class="cal-modal-desc">
-                Your group registration is confirmed! Event takes place at <strong>CV Raman Hall, KKR &amp; KSR Institute of Technology and Sciences (KITS)</strong> on <strong>October 29 &amp; 30, 2026</strong>. Tap below to open Google Calendar with <strong th:text="${registration.teamSize}">3</strong> members already attached as attendees.
+                Your group registration is confirmed! Event takes place at <strong>CV Raman Hall, KKR &amp; KSR
+                    Institute of Technology and Sciences (KITS)</strong> on <strong>October 29 &amp; 30, 2026</strong>.
+                Tap below to open Google Calendar with <strong th:text="${registration.teamSize}">3</strong> members
+                already attached as attendees.
             </p>
             <div class="cal-modal-actions">
-                <a th:href="${registration.googleCalendarUrl}" target="_blank" rel="noopener noreferrer" class="btn-google-cal" id="modalSaveCalBtn" onclick="closeCalModal()">
+                <a th:href="${registration.googleCalendarUrl}" target="_blank" rel="noopener noreferrer"
+                    class="btn-google-cal" id="modalSaveCalBtn" onclick="closeCalModal()">
                     <span>&#128197;</span> Save to Google Calendar Now
                 </a>
-                <button type="button" class="btn-secondary" onclick="closeCalModal()" style="background: transparent; border-color: rgba(255,255,255,0.2); color: var(--muted); cursor: pointer;">
+                <button type="button" class="btn-secondary" onclick="closeCalModal()"
+                    style="background: transparent; border-color: rgba(255,255,255,0.2); color: var(--muted); cursor: pointer;">
                     View Boarding Pass First
                 </button>
             </div>
@@ -367,8 +404,9 @@
 
     <footer class="footer">
         <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a
-                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a
-                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship
+                Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank"
+                rel="noopener noreferrer">kitsecellgnt.com</a></p>
     </footer>
 
     <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>

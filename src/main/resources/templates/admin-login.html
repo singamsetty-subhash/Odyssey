@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'Admin Gateway | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
+    <title
+        th:text="'Admin Gateway | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
         Admin Gateway | Odyssey: Beyond the Horizon
     </title>
     <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
@@ -77,18 +78,22 @@
             </div>
 
             <!-- Inactivity Timeout Banner -->
-            <div th:if="${timeoutMessage}" class="login-alert" style="background: rgba(245, 158, 11, 0.15); border: 1.5px solid rgba(245, 158, 11, 0.55); color: #fcd34d;" role="alert">
+            <div th:if="${timeoutMessage}" class="login-alert"
+                style="background: rgba(245, 158, 11, 0.15); border: 1.5px solid rgba(245, 158, 11, 0.55); color: #fcd34d;"
+                role="alert">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" aria-hidden="true">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span th:text="${timeoutMessage}">Session Expired: You were automatically logged out due to 30 minutes of inactivity.</span>
+                <span th:text="${timeoutMessage}">Session Expired: You were automatically logged out due to 30 minutes
+                    of inactivity.</span>
             </div>
 
             <!-- If Already Logged In: Provide direct choice, no forced bounce loop -->
             <div th:if="${alreadyLoggedIn}" class="already-logged-in-box" style="margin-top: 1rem;">
-                <div class="login-alert alert-success" style="margin-bottom: 1.5rem; justify-content: center; text-align: center;">
+                <div class="login-alert alert-success"
+                    style="margin-bottom: 1.5rem; justify-content: center; text-align: center;">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" aria-hidden="true">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -98,11 +103,13 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 0.9rem;">
-                    <a th:href="${redirectUrl}" class="btn-login-submit" style="text-decoration: none; justify-content: center;">
+                    <a th:href="${redirectUrl}" class="btn-login-submit"
+                        style="text-decoration: none; justify-content: center;">
                         <span>Open Admin Console</span>
                         <span class="btn-arrow">&rarr;</span>
                     </a>
-                    <a th:href="@{/admin/logout}" class="btn-login-submit" style="text-decoration: none; justify-content: center; background: rgba(255, 118, 117, 0.18); border-color: rgba(255, 118, 117, 0.5); color: #ff9aa2;">
+                    <a th:href="@{/admin/logout}" class="btn-login-submit"
+                        style="text-decoration: none; justify-content: center; background: rgba(255, 118, 117, 0.18); border-color: rgba(255, 118, 117, 0.5); color: #ff9aa2;">
                         <span>&#128274; Logout / End Session</span>
                     </a>
                     <a th:href="@{/}" class="nav-home-btn" style="justify-content: center; padding: 0.75rem;">
@@ -112,7 +119,8 @@
             </div>
 
             <!-- Form (shown when not already logged in) -->
-            <form th:unless="${alreadyLoggedIn}" th:action="@{/admin/login}" method="post" class="login-form" autocomplete="off">
+            <form th:unless="${alreadyLoggedIn}" th:action="@{/admin/login}" method="post" class="login-form"
+                autocomplete="off">
                 <input type="hidden" name="redirectUrl" th:value="${redirectUrl}">
 
                 <!-- Username -->
@@ -126,8 +134,8 @@
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                         </span>
-                        <input type="text" id="username" name="username" class="login-input"
-                            th:value="${prevUsername}" required autofocus autocomplete="off">
+                        <input type="text" id="username" name="username" class="login-input" th:value="${prevUsername}"
+                            required autofocus autocomplete="off">
                     </div>
                 </div>
 
@@ -142,10 +150,10 @@
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                             </svg>
                         </span>
-                        <input type="password" id="adminPassword" name="password" class="login-input"
-                            value="" required autocomplete="new-password">
-                        <button type="button" class="btn-toggle-pass" id="btnTogglePass" aria-label="Toggle password visibility"
-                            onclick="togglePasswordVisibility()">
+                        <input type="password" id="adminPassword" name="password" class="login-input" value="" required
+                            autocomplete="new-password">
+                        <button type="button" class="btn-toggle-pass" id="btnTogglePass"
+                            aria-label="Toggle password visibility" onclick="togglePasswordVisibility()">
                             <svg id="eyeIconOpen" viewBox="0 0 24 24" width="18" height="18" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -180,8 +188,9 @@
     <!-- Footer -->
     <footer class="login-page-footer">
         <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a
-                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a
-                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship
+                Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank"
+                rel="noopener noreferrer">kitsecellgnt.com</a></p>
     </footer>
 
     <script th:src="@{/js/admin-login.js(v=1)}" src="/js/admin-login.js?v=1"></script>

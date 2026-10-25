@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'Find My Ticket | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
+    <title
+        th:text="'Find My Ticket | ' + (${eventName} != null ? ${eventName} : 'Odyssey') + ': ' + (${tagline} != null ? ${tagline} : 'Beyond the Horizon')">
         Find My Ticket | Odyssey: Beyond the Horizon
     </title>
     <link rel="icon" type="image/png" th:href="@{/images/logo-icon.png}" href="/images/logo-icon.png">
@@ -22,9 +23,11 @@
     <!-- Top Navigation Header -->
     <nav class="nav">
         <a th:href="@{/}" href="/" class="logo" aria-label="Odyssey">
-            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo" class="nav-logo-img">
+            <img th:src="@{/images/logo-horizontal.png}" src="/images/logo-horizontal.png" alt="E-Cell Odyssey Logo"
+                class="nav-logo-img">
         </a>
-        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"
+            aria-controls="navMenu">
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
             <span class="hamburger-bar"></span>
@@ -32,7 +35,8 @@
         <ul id="navMenu">
             <li><a th:href="@{/}" href="/">Home</a></li>
             <li><a th:href="@{/register}" href="/register">Register Team</a></li>
-            <li><a th:href="@{/find-ticket}" href="/find-ticket" style="color: var(--aqua); font-weight: 600;">Find My Ticket</a></li>
+            <li><a th:href="@{/find-ticket}" href="/find-ticket" style="color: var(--aqua); font-weight: 600;">Find
+                    mypass</a></li>
             <li><a th:href="@{/faq}" href="/faq">FAQ</a></li>
             <li><a th:href="@{/student-response}" href="/student-response">Student Response</a></li>
             <li><a th:href="@{/calendar}" href="/calendar">Calendar</a></li>
@@ -83,8 +87,8 @@
                         <div class="find-input-wrap">
                             <span class="find-input-icon">&#128101;</span>
                             <input type="text" id="findTeamName" name="teamName" class="find-input"
-                                placeholder="e.g. Cyber Guardians, Alpha Titans..."
-                                th:value="${prevTeamName}" required autofocus>
+                                placeholder="e.g. Cyber Guardians, Alpha Titans..." th:value="${prevTeamName}" required
+                                autofocus>
                         </div>
                         <span class="find-hint">The unique team name registered for your group.</span>
                     </div>
@@ -97,8 +101,7 @@
                         <div class="find-input-wrap">
                             <span class="find-input-icon">&#127891;</span>
                             <input type="text" id="findLeaderName" name="leaderName" class="find-input"
-                                placeholder="e.g. Rahul Sharma"
-                                th:value="${prevLeaderName}" required>
+                                placeholder="e.g. Rahul Sharma" th:value="${prevLeaderName}" required>
                         </div>
                         <span class="find-hint">Primary leader who completed the registration.</span>
                     </div>
@@ -111,8 +114,7 @@
                         <div class="find-input-wrap">
                             <span class="find-input-icon">&#9993;</span>
                             <input type="email" id="findEmail" name="email" class="find-input"
-                                placeholder="e.g. rahul@kits.ac.in"
-                                th:value="${prevEmail}" required>
+                                placeholder="e.g. rahul@kits.ac.in" th:value="${prevEmail}" required>
                         </div>
                         <span class="find-hint">Email address of the group leader.</span>
                     </div>
@@ -125,8 +127,7 @@
                         <div class="find-input-wrap">
                             <span class="find-input-icon">&#128179;</span>
                             <input type="text" id="findUtr" name="utr" class="find-input"
-                                placeholder="e.g. 12-digit UPI UTR / Ref ID"
-                                th:value="${prevUtr}" required>
+                                placeholder="e.g. 12-digit UPI UTR / Ref ID" th:value="${prevUtr}" required>
                         </div>
                         <span class="find-hint">12-digit UPI transaction reference from GPay/PhonePe/Paytm.</span>
                     </div>
@@ -144,7 +145,8 @@
             <div class="help-box">
                 <h3><span>&#128161;</span> Where to Find Your UTR?</h3>
                 <p>
-                    Open Google Pay, PhonePe, or Paytm &rarr; tap on the transaction sent to <code>9392476594@ybl</code> &rarr;
+                    Open Google Pay, PhonePe, or Paytm &rarr; tap on the transaction sent to <code>9392476594@ybl</code>
+                    &rarr;
                     look for the 12-digit <strong>UPI Ref No. / Transaction ID / UTR</strong>.
                 </p>
             </div>
@@ -153,7 +155,8 @@
                 <p>
                     If your team has not enlisted yet for Odyssey 2026, you can join now!
                     <br>
-                    <a th:href="@{/register}" href="/register" style="color: var(--aqua); font-weight: 600; text-decoration: underline;">
+                    <a th:href="@{/register}" href="/register"
+                        style="color: var(--aqua); font-weight: 600; text-decoration: underline;">
                         Register Your Crew Here &rarr;
                     </a>
                 </p>
@@ -162,10 +165,14 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">kitsecellgnt.com</a></p>
+        <p>&copy; 2026 <span th:text="${eventName}">Odyssey</span> &middot; Designed and Developed by <a
+                href="https://kitsecellgnt.com/" target="_blank" rel="noopener noreferrer">KITS Entrepreneurship
+                Cell</a> &middot; <a href="https://kitsecellgnt.com/" target="_blank"
+                rel="noopener noreferrer">kitsecellgnt.com</a></p>
     </footer>
 
     <script th:src="@{/js/navbar.js(v=2)}" src="/js/navbar.js?v=2"></script>
     <script th:src="@{/js/find-ticket.js(v=1)}" src="/js/find-ticket.js?v=1"></script>
 </body>
+
 </html>
