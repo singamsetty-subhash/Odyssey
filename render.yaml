@@ -12,7 +12,7 @@ services:
     envVars:
       - key: JAVA_VERSION
         value: "17"
-      # --- Database (Supabase free PostgreSQL) ---
+      # --- Database (MySQL) ---
       - key: DB_URL
         sync: false
       - key: DB_USERNAME
