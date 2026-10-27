@@ -258,6 +258,7 @@
                         <th>Phone &amp; Email</th>
                         <th style="white-space: nowrap;">Group Size</th>
                         <th style="white-space: nowrap;">Fee Paid</th>
+                        <th style="white-space: nowrap;">Reg Date &amp; Time</th>
                         <th>UTR Ref</th>
                         <th>Payment Proof</th>
                         <th>Action</th>
@@ -332,6 +333,14 @@
                                 <span
                                     style="color: var(--muted); font-weight: 600; font-size: 1.1rem; display: inline-block; padding-left: 0.25rem;">&minus;</span>
                             </th:block>
+                        </td>
+                        <td style="white-space: nowrap;">
+                            <div style="color: #ffffff; font-weight: 600;" th:text="${r.formattedRegistrationDate}">27 Oct 2026</div>
+                            <div th:if="${r.formattedRegistrationTime != null and !r.formattedRegistrationTime.isBlank()}"
+                                style="font-size: 0.78rem; color: var(--foam); margin-top: 0.2rem; display: flex; align-items: center; gap: 0.35rem;">
+                                <span style="color: var(--aqua); font-size: 0.75rem;">&#128337;</span>
+                                <span th:text="${r.formattedRegistrationTime}">03:05 PM</span>
+                            </div>
                         </td>
                         <td>
                             <span

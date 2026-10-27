@@ -279,6 +279,7 @@ public class RegistrationController {
         demo.setMember3Phone("9876543212");
         demo.setMember3RollNumber("22JR1A0503");
         demo.setUtr("UPI987654321012");
+        demo.setRegisteredAt(java.time.LocalDateTime.now());
         model.addAttribute("eventName", "Odyssey");
         model.addAttribute("tagline", "Beyond the Horizon");
         model.addAttribute("registration", demo);
@@ -573,7 +574,7 @@ public class RegistrationController {
                     r.isLeader() ? String.valueOf(r.getAmountPaid()) : "-",
                     escapeCsv(r.getUtr()),
                     escapeCsv(r.getPaymentImagePath()),
-                    escapeCsv(r.getRegisteredAt() != null ? r.getRegisteredAt().toString() : "")));
+                    escapeCsv(r.getFormattedRegistrationDateTime())));
         }
         writer.flush();
     }
@@ -635,7 +636,7 @@ public class RegistrationController {
             writer.println("<td>" + escapeHtml(r.getUtr()) + "</td>");
             writer.println("<td>" + escapeHtml(r.getPaymentImagePath()) + "</td>");
             writer.println(
-                    "<td>" + escapeHtml(r.getRegisteredAt() != null ? r.getRegisteredAt().toString() : "") + "</td>");
+                    "<td>" + escapeHtml(r.getFormattedRegistrationDateTime()) + "</td>");
             writer.println("</tr>");
         }
 

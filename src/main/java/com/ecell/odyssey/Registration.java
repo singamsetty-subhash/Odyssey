@@ -1,6 +1,7 @@
 package com.ecell.odyssey;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -417,6 +418,39 @@ public class Registration {
     public LocalDateTime getRegisteredAt() { return registeredAt; }
     public void setRegisteredAt(LocalDateTime registeredAt) { this.registeredAt = registeredAt; }
 
+    public String getFormattedRegistrationDate() {
+        if (registeredAt == null) {
+            return "—";
+        }
+        try {
+            return registeredAt.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
+        } catch (Exception e) {
+            return "—";
+        }
+    }
+
+    public String getFormattedRegistrationTime() {
+        if (registeredAt == null) {
+            return "";
+        }
+        try {
+            return registeredAt.format(DateTimeFormatter.ofPattern("hh:mm a"));
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public String getFormattedRegistrationDateTime() {
+        if (registeredAt == null) {
+            return "—";
+        }
+        try {
+            return registeredAt.format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
+        } catch (Exception e) {
+            return registeredAt.toString();
+        }
+    }
+
     // Record-style aliases for backwards compatibility
     public String id() { return getId(); }
     public String teamName() { return getTeamName(); }
@@ -459,6 +493,9 @@ public class Registration {
     public String participantRole() { return getParticipantRole(); }
     public String groupId() { return getGroupId(); }
     public LocalDateTime registeredAt() { return getRegisteredAt(); }
+    public String formattedRegistrationDate() { return getFormattedRegistrationDate(); }
+    public String formattedRegistrationTime() { return getFormattedRegistrationTime(); }
+    public String formattedRegistrationDateTime() { return getFormattedRegistrationDateTime(); }
 
     public boolean isLeader() {
         if (participantRole != null && !participantRole.isBlank()) {

@@ -8,8 +8,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RegistrationRepository extends JpaRepository<Registration, String> {
     Optional<Registration> findById(String id);
+
     List<Registration> findAllByOrderByRegisteredAtDesc();
+
     long countByTrack(String track);
+
     boolean existsByTeamNameIgnoreCase(String teamName);
+
     Optional<Registration> findFirstByPaymentImagePathContaining(String filename);
 }
