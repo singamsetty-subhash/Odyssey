@@ -420,7 +420,7 @@ To resolve the impedance mismatch between a single team registration form and in
 
 ### 6.1 Performance Requirements
 - `NFR-PERF-001`: **Response Latency:** Server response time for rendered HTML views shall be under 250 milliseconds under standard load (up to 100 concurrent requests).
-- `NFR-PERF-002`: **Database Pool Management:** HikariCP connection pool configured with a maximum of 10 connections, connection timeout of 30,000ms, and minimum idle of 2 connections.
+- `NFR-PERF-002`: **Database Pool Management:** HikariCP connection pool configured with a maximum of 15 connections (supporting 15 concurrent users simultaneously), connection timeout of 30,000ms, and minimum idle of 5 connections.
 - `NFR-PERF-003`: **Upload Processing:** Multi-part request processing shall not exceed 10MB per file and 10MB per total request.
 
 ### 6.2 Safety and Security Requirements
