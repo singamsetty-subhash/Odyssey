@@ -1,6 +1,8 @@
 package com.ecell.odyssey;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -285,7 +287,7 @@ public class Registration {
         this.member5Role = member5Role;
         this.participantRole = participantRole != null && !participantRole.isBlank() ? participantRole : "Participant";
         this.groupId = groupId != null && !groupId.isBlank() ? groupId : id;
-        this.registeredAt = registeredAt != null ? registeredAt : LocalDateTime.now();
+        this.registeredAt = registeredAt != null ? registeredAt : LocalDateTime.now(ZoneOffset.UTC);
     }
 
     // Getters and Setters
@@ -418,36 +420,55 @@ public class Registration {
     public LocalDateTime getRegisteredAt() { return registeredAt; }
     public void setRegisteredAt(LocalDateTime registeredAt) { this.registeredAt = registeredAt; }
 
-    public String getFormattedRegistrationDate() {
+    public static final ZoneId UTC_ZONE = ZoneId.of("UTC");
+    public static final ZoneId IST_ZONE = ZoneId.of("Asia/Kolkata");
+
+    public LocalDateTime getRegisteredAtIst() {
         if (registeredAt == null) {
+            return null;
+        }
+        try {
+            return registeredAt.atZone(UTC_ZONE)
+                               .withZoneSameInstant(IST_ZONE)
+                               .toLocalDateTime();
+        } catch (Exception e) {
+            return registeredAt;
+        }
+    }
+
+    public String getFormattedRegistrationDate() {
+        LocalDateTime ist = getRegisteredAtIst();
+        if (ist == null) {
             return "—";
         }
         try {
-            return registeredAt.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
+            return ist.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
         } catch (Exception e) {
             return "—";
         }
     }
 
     public String getFormattedRegistrationTime() {
-        if (registeredAt == null) {
+        LocalDateTime ist = getRegisteredAtIst();
+        if (ist == null) {
             return "";
         }
         try {
-            return registeredAt.format(DateTimeFormatter.ofPattern("hh:mm a"));
+            return ist.format(DateTimeFormatter.ofPattern("hh:mm a"));
         } catch (Exception e) {
             return "";
         }
     }
 
     public String getFormattedRegistrationDateTime() {
-        if (registeredAt == null) {
+        LocalDateTime ist = getRegisteredAtIst();
+        if (ist == null) {
             return "—";
         }
         try {
-            return registeredAt.format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
+            return ist.format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a")) + " IST";
         } catch (Exception e) {
-            return registeredAt.toString();
+            return ist.toString();
         }
     }
 
@@ -493,6 +514,7 @@ public class Registration {
     public String participantRole() { return getParticipantRole(); }
     public String groupId() { return getGroupId(); }
     public LocalDateTime registeredAt() { return getRegisteredAt(); }
+    public LocalDateTime registeredAtIst() { return getRegisteredAtIst(); }
     public String formattedRegistrationDate() { return getFormattedRegistrationDate(); }
     public String formattedRegistrationTime() { return getFormattedRegistrationTime(); }
     public String formattedRegistrationDateTime() { return getFormattedRegistrationDateTime(); }

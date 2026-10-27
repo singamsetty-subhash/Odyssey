@@ -279,7 +279,7 @@ public class RegistrationController {
         demo.setMember3Phone("9876543212");
         demo.setMember3RollNumber("22JR1A0503");
         demo.setUtr("UPI987654321012");
-        demo.setRegisteredAt(java.time.LocalDateTime.now());
+        demo.setRegisteredAt(java.time.LocalDateTime.now(java.time.ZoneOffset.UTC));
         model.addAttribute("eventName", "Odyssey");
         model.addAttribute("tagline", "Beyond the Horizon");
         model.addAttribute("registration", demo);

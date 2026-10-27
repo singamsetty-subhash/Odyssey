@@ -1,6 +1,7 @@
 package com.ecell.odyssey;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -127,7 +128,7 @@ public class RegistrationService {
         if (paymentImageBytes != null && paymentImageBytes.length > 0) {
             cleanPaymentImg = "/register/payment-image/" + groupId;
         }
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
         // 1. Leader Registration Record
         Registration leaderReg = new Registration(
